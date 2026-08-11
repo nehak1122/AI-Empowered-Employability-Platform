@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "employaai-frontend",
+      "runtimeExecutable": "streamlit",
+      "runtimeArgs": ["run", "phase8_frontend/app.py", "--server.port", "8501", "--server.headless", "true"],
+      "port": 8501
+    }
+  ]
+}
