@@ -8,10 +8,10 @@ sys.path.insert(0, APP_DIR)
 
 from utils.state import init_state
 from components.navigation import render_sidebar, render_mobile_bottom_nav
-from screens import login, dashboard, profile
-# Assessment, Score, Skill Gap, Roadmap, Certifications, Career Suggestions,
-# Analytics, Reports and Settings are already written (screens/*.py) but not
-# wired in yet - that's next session's work, not today's. See progress.md.
+from screens import (
+    login, dashboard, profile, assessment, score, skill_gap, roadmap,
+    certifications, careers, analytics, reports, settings,
+)
 
 st.set_page_config(page_title="EmployaAI", page_icon="🎓", layout="wide", initial_sidebar_state="expanded")
 
@@ -30,6 +30,15 @@ render_sidebar(page)
 SCREENS = {
     "dashboard": dashboard.render,
     "profile": profile.render,
+    "assessment": assessment.render,
+    "score": score.render,
+    "skill_gap": skill_gap.render,
+    "roadmap": roadmap.render,
+    "certifications": certifications.render,
+    "careers": careers.render,
+    "analytics": analytics.render,
+    "reports": reports.render,
+    "settings": settings.render,
 }
 
 SCREENS[page]()

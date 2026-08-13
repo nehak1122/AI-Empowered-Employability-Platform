@@ -81,15 +81,10 @@ rather than configuring Plotly from scratch each time.
 
 ## Scope for today
 
-Today's shipped, tested scope is three screens: Login, Dashboard, and Student Profile.
-The nav only shows entries for screens that are actually live — there's no "coming soon"
-placeholder page anywhere in the app; a nav item either works or it isn't there.
-
-Assessment, Employability Score, Skill Gap, Learning Roadmap, Certifications, Career
-Suggestions, Analytics, and Reports are already written in full (`screens/*.py`) and pass
-a syntax check, but they are **not wired into `app.py` yet** and won't show up when you
-run the app today — that's deliberate, to keep today's real, verified scope honest and
-match the pacing you asked for, rather than dumping all eleven screens in one sitting.
-Wiring each one in is mechanical (add the import, add one line to the `SCREENS` dict in
-`app.py`, add it back to `LIVE_SCREENS` in `utils/state.py`) — see `progress.md` for the
-plan on when that happens.
+Shipped in stages: first Login, Dashboard, and Student Profile only (tested and verified
+before moving on), then the remaining eight screens once you confirmed you wanted the
+full set wired in rather than held back. All eleven screens are now live in `app.py` and
+were re-tested at desktop, tablet, and mobile widths after wiring them in. The nav only
+shows entries for screens that are actually live — there's no "coming soon" placeholder
+page anywhere in the app; a nav item either works or it isn't there. See `progress.md`
+for the day-by-day record of when each batch shipped.

@@ -1,12 +1,11 @@
 import streamlit as st
 
-# Screens actually wired into the running app today. Nav only ever shows
-# entries for screens in this set - no dead links, no "coming soon" pages.
-# skill_gap.py, roadmap.py, certifications.py, careers.py, analytics.py,
-# reports.py, assessment.py and score.py already exist and work (see
-# progress.md) but aren't switched on here yet - that's the next session's
-# work, not today's.
-LIVE_SCREENS = {"dashboard", "profile"}
+# Screens actually wired into the running app. Nav only ever shows entries
+# for screens in this set - no dead links, no "coming soon" pages.
+LIVE_SCREENS = {
+    "dashboard", "profile", "assessment", "score", "skill_gap", "roadmap",
+    "certifications", "careers", "analytics", "reports", "settings",
+}
 
 _ALL_NAV_ITEMS = [
     ("MAIN", [

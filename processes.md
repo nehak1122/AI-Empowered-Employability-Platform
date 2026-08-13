@@ -62,19 +62,31 @@ from the running app (`app.py`'s `SCREENS` dict and `utils/state.py`'s `LIVE_SCR
 both only list what ships today) so the nav doesn't advertise anything that isn't really
 live.
 
+**7. Wiring in the remaining eight screens.**
+Once you confirmed you wanted the full set live (not held back for later days), I added
+Assessment, Employability Score, Skill Gap, Learning Roadmap, Certifications, Career
+Suggestions, Analytics, and Reports to `app.py`'s `SCREENS` dict and `utils/state.py`'s
+`LIVE_SCREENS` set, then clicked through every one of them in the running app rather than
+assuming the syntax check meant they'd render correctly. All eleven rendered without
+errors on the first pass. One cosmetic-only thing noticed and left as is: the emoji icons
+on the Reports cards (📄 📈 🔗) sit slightly close to the heading text in the browser —
+the HTML has a normal space character before the text, this is just how that particular
+emoji glyph measures in the browser's font, not a code bug.
+
 ## What was actually verified, not just assumed
 
-Before calling any of this done, I ran the app locally, signed in, and clicked through
-Dashboard and Profile at three widths — 1280px (desktop), 768px (tablet), and 375px
-(phone) — and looked at each one, rather than just reading the code and assuming the CSS
-would behave. Two of the bugs above (#2 and #3) would not have been caught without
-actually doing that. After trimming the scope back down to three screens, I re-ran the
-app once more to confirm the nav and bottom bar only show Dashboard and Profile, with no
-dead links.
+I ran the app locally, signed in, and clicked through every one of the eleven screens —
+Dashboard, Profile, Assessment, Employability Score, Skill Gap, Learning Roadmap,
+Certifications, Career Suggestions, Analytics, Reports, Settings — at three widths:
+1280px (desktop), 768px (tablet), and 375px (phone). Checked the server logs for runtime
+errors after each pass (none found). Specifically re-checked the table → stacked-card
+behaviour on Skill Gap and Certifications at phone width, since those two screens are the
+ones that actually exercise `components/tables.py`'s responsive pattern — it held up
+correctly on both.
 
 ## What's not done yet
 
-Eight of the eleven screens (Assessment, Employability Score, Skill Gap, Learning
-Roadmap, Certifications, Career Suggestions, Analytics, Reports) are written and syntax-
-checked but not switched on in the running app — see `decisions.md` for exactly what
-"wiring one in" involves, and `progress.md` for the plan on when that happens.
+Nothing in the eleven-screen scope. All eleven screens are wired in, tested at three
+breakpoints, and free of runtime errors. Still open: this hasn't been pushed to GitHub —
+staying local until you say otherwise — and the underlying data is still the static
+placeholder set in `data/dummy_data.py`, not real backend/ML output.
