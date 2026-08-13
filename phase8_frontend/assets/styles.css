@@ -141,15 +141,45 @@ html, body, [class*="css"] {
     color: #D1D5DB;
     font-weight: 500;
     min-height: 38px;
+    padding-left: 4px;
 }
-[data-testid="stSidebar"] .stButton > button:hover {
+/* Nav rows are real st.container(key="nav-row-*") elements, so this
+   selector reliably wraps the icon + button pair - unlike raw <div> tags
+   opened/closed across separate st.markdown calls, which never nest. */
+[data-testid="stSidebar"] [class*="st-key-nav-row-"] {
+    border-radius: 8px;
+    margin-bottom: 2px;
+}
+[data-testid="stSidebar"] [class*="st-key-nav-row-"]:hover {
     background: rgba(255,255,255,0.06);
+}
+[data-testid="stSidebar"] [class*="st-key-nav-row-"] .stButton > button:hover {
+    background: transparent;
     color: #fff;
 }
-.ea-nav-active > button {
-    background: var(--color-primary) !important;
-    color: #fff !important;
-    font-weight: 600 !important;
+.ea-nav-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+}
+/* The sidebar is narrow enough (200-320px) that Streamlit's own
+   column-stacking breakpoint kicks in even though the icon+label row
+   should never stack - force it to stay a row at every width. */
+[data-testid="stSidebar"] [class*="st-key-nav-row-"] [data-testid="stHorizontalBlock"] {
+    flex-direction: row !important;
+    align-items: center;
+    gap: 0 !important;
+}
+[data-testid="stSidebar"] [class*="st-key-nav-row-"] [data-testid="stColumn"] {
+    min-width: 0 !important;
+    width: auto !important;
+}
+[data-testid="stSidebar"] [class*="st-key-nav-row-"] [data-testid="stColumn"]:first-child {
+    flex: 0 0 28px !important;
+}
+[data-testid="stSidebar"] [class*="st-key-nav-row-"] [data-testid="stColumn"]:last-child {
+    flex: 1 1 auto !important;
 }
 .ea-nav-group-label {
     font-size: 11px;

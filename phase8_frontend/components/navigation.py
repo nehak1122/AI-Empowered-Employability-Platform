@@ -1,6 +1,7 @@
 import streamlit as st
 from data.dummy_data import STUDENT
 from utils.state import NAV_ITEMS, LIVE_SCREENS, go_to
+from components.icons import icon
 
 
 def render_sidebar(current_page: str):
@@ -14,17 +15,31 @@ def render_sidebar(current_page: str):
             unsafe_allow_html=True,
         )
 
+        # st.container(key=...) is the only reliable way to get a real
+        # wrapping element around icon+button in Streamlit - raw <div> tags
+        # opened/closed across separate st.markdown calls each land in
+        # their own isolated container and never actually nest.
+        st.markdown(
+            f"<style>.st-key-nav-row-{current_page} {{ background: var(--color-primary); "
+            f"border-radius: 8px; }} .st-key-nav-row-{current_page} .stButton > button "
+            f"{{ color: #fff !important; font-weight: 600 !important; }}</style>",
+            unsafe_allow_html=True,
+        )
+
         for group_label, items in NAV_ITEMS:
             st.markdown(f'<div class="ea-nav-group-label">{group_label}</div>', unsafe_allow_html=True)
             for key, label, count in items:
                 active = key == current_page
-                wrapper_class = "ea-nav-active" if active else ""
-                st.markdown(f'<div class="{wrapper_class}">', unsafe_allow_html=True)
-                display_label = f"{label}  ·  {count}" if count else label
-                if st.button(display_label, key=f"nav-{key}", width="stretch"):
-                    go_to(key)
-                    st.rerun()
-                st.markdown('</div>', unsafe_allow_html=True)
+                icon_color = "#FFFFFF" if active else "#9CA3AF"
+                with st.container(key=f"nav-row-{key}"):
+                    icon_col, btn_col = st.columns([1, 6], gap="small")
+                    with icon_col:
+                        st.markdown(f'<div class="ea-nav-icon">{icon(key, icon_color)}</div>', unsafe_allow_html=True)
+                    with btn_col:
+                        display_label = f"{label}  ·  {count}" if count else label
+                        if st.button(display_label, key=f"nav-{key}", width="stretch"):
+                            go_to(key)
+                            st.rerun()
 
         st.markdown('<div style="flex-grow:1;"></div>', unsafe_allow_html=True)
         st.markdown(
@@ -57,7 +72,12 @@ def render_mobile_bottom_nav(current_page: str):
         cols = st.columns(len(MOBILE_BOTTOM_ITEMS))
         for col, (key, label) in zip(cols, MOBILE_BOTTOM_ITEMS):
             with col:
-                marker = "●  " if key == current_page else ""
-                if st.button(f"{marker}{label}", key=f"mnav-{key}", width="stretch"):
+                active = key == current_page
+                color = "#6C5CE7" if active else "#9CA3AF"
+                st.markdown(
+                    f'<div style="text-align:center;color:{color};">{icon(key, color)}</div>',
+                    unsafe_allow_html=True,
+                )
+                if st.button(label, key=f"mnav-{key}", width="stretch"):
                     go_to(key)
                     st.rerun()

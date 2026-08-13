@@ -73,6 +73,29 @@ on the Reports cards (📄 📈 🔗) sit slightly close to the heading text in 
 the HTML has a normal space character before the text, this is just how that particular
 emoji glyph measures in the browser's font, not a code bug.
 
+**8. Sidebar had no real icons, and the active-page highlight was broken by a
+Streamlit DOM quirk.**
+You pointed out the sidebar looked plain and had no icons next to the nav items. True —
+the original build used plain text labels only. Fixed by building a small hand-drawn SVG
+icon set (`components/icons.py`, one outlined icon per screen, matching the "single icon
+family, rounded ends" rule from the design pack) and placing one next to every nav item
+and bottom-nav item.
+
+While wiring the icons in, I found a real bug in code that had shipped earlier: the
+purple "active page" highlight was built by opening a `<div class="ea-nav-active">` in
+one `st.markdown()` call and closing it with `</div>` in a later one, with the icon and
+button rendered in between. That looks like normal HTML, but Streamlit gives every
+`st.markdown()` call its own isolated container — the opening and closing tags never
+actually end up wrapping anything in the real DOM; each one silently self-closes into an
+empty, invisible element. I only found this by checking the actual rendered DOM in the
+browser (an element's box was reporting zero height when it should have been a full nav
+row), not by reading the code. Rewrote it using `st.container(key=...)`, which does
+create one real wrapping element per row, and moved the active-page background to a
+small CSS block keyed off that container's class. This also means whatever visual
+"highlighting" appeared to work in earlier screenshots wasn't reliably doing what it
+looked like it was doing — worth flagging since it's the kind of bug that's easy to miss
+by eye and only shows up when you inspect the actual markup.
+
 ## What was actually verified, not just assumed
 
 I ran the app locally, signed in, and clicked through every one of the eleven screens —
