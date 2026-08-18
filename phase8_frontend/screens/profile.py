@@ -19,7 +19,7 @@ def render():
     with hc1:
         st.markdown(f"""
         <div class="ea-card" style="display:flex;gap:16px;align-items:center;">
-            <div style="width:56px;height:56px;border-radius:999px;background:#6C5CE7;color:#fff;
+            <div style="width:56px;height:56px;border-radius:999px;background:#0EA4AF;color:#fff;
             display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;">{STUDENT['initials']}</div>
             <div>
                 <div class="ea-section">{STUDENT['name']}</div>
@@ -42,7 +42,7 @@ def render():
         if step["status"] == "done":
             marker = f'<div style="width:22px;height:22px;border-radius:999px;background:#22C55E;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;">✓</div>'
         elif step["status"] == "current":
-            marker = f'<div style="width:22px;height:22px;border-radius:999px;background:#6C5CE7;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;">{i}</div>'
+            marker = f'<div style="width:22px;height:22px;border-radius:999px;background:#0EA4AF;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;">{i}</div>'
         else:
             marker = f'<div style="width:22px;height:22px;border-radius:999px;background:#E5E7EB;color:#6B7280;font-size:12px;display:flex;align-items:center;justify-content:center;">{i}</div>'
         label_color = "#111827" if step["status"] != "pending" else "#9CA3AF"

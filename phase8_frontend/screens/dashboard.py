@@ -49,7 +49,7 @@ def render():
         """, unsafe_allow_html=True)
     with c3:
         st.markdown("""
-        <div class="ea-card" style="border-color:#6C5CE7;">
+        <div class="ea-card" style="border-color:#0EA4AF;">
             <div class="ea-card-kicker">⚡ Today's goal</div>
             <div class="ea-body" style="font-weight:600;">Start the Terraform module</div>
             <div class="ea-small">Worth around 7 points, ~3 weeks of work.</div>

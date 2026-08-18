@@ -8,7 +8,7 @@ fix only has to happen in one place.
 import plotly.graph_objects as go
 import streamlit as st
 
-PRIMARY = "#6C5CE7"
+PRIMARY = "#0EA4AF"
 GREY = "#D1D5DB"
 GREEN = "#22C55E"
 TEXT_SECONDARY = "#6B7280"
@@ -86,7 +86,7 @@ def line(x, student, cohort=None, target=None, height=260):
     st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
 
 
-def donut(labels, values, colors=(PRIMARY, "#A78BFA", "#F59E0B"), height=260):
+def donut(labels, values, colors=(PRIMARY, "#7FC8D1", "#F59E0B"), height=260):
     fig = go.Figure(go.Pie(
         labels=labels, values=values, hole=0.6,
         marker=dict(colors=list(colors)),

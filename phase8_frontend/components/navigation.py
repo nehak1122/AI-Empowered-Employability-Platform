@@ -8,7 +8,7 @@ def render_sidebar(current_page: str):
     with st.sidebar:
         st.markdown(
             '<div style="display:flex;align-items:center;gap:8px;padding:8px 4px 16px 4px;">'
-            '<div style="width:28px;height:28px;border-radius:8px;background:#6C5CE7;'
+            '<div style="width:28px;height:28px;border-radius:8px;background:#0EA4AF;'
             'display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;">E</div>'
             '<span class="ea-sidebar-wordmark-text" style="font-weight:600;color:#fff;">EmployaAI</span>'
             '</div>',
@@ -45,7 +45,7 @@ def render_sidebar(current_page: str):
         st.markdown(
             f"""
             <div style="display:flex;align-items:center;gap:8px;margin-top:24px;padding:8px 4px;border-top:1px solid rgba(255,255,255,.08);">
-                <div style="width:32px;height:32px;border-radius:999px;background:#6C5CE7;
+                <div style="width:32px;height:32px;border-radius:999px;background:#0EA4AF;
                 display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff;font-size:13px;">{STUDENT['initials']}</div>
                 <div class="ea-sidebar-footer-text">
                     <div style="font-size:13px;font-weight:600;color:#fff;">{STUDENT['name']}</div>
@@ -73,7 +73,7 @@ def render_mobile_bottom_nav(current_page: str):
         for col, (key, label) in zip(cols, MOBILE_BOTTOM_ITEMS):
             with col:
                 active = key == current_page
-                color = "#6C5CE7" if active else "#9CA3AF"
+                color = "#0EA4AF" if active else "#9CA3AF"
                 st.markdown(
                     f'<div style="text-align:center;color:{color};">{icon(key, color)}</div>',
                     unsafe_allow_html=True,

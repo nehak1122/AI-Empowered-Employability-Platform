@@ -10,7 +10,7 @@ def render():
         st.markdown('<div class="ea-body" style="color:#6B7280;">Six hours a week, in the order that actually makes sense to learn things.</div>', unsafe_allow_html=True)
     with top_r:
         st.markdown('<div class="ea-small" style="text-align:right;">Projected score</div>', unsafe_allow_html=True)
-        st.markdown('<div class="ea-section" style="text-align:right;color:#6C5CE7;">74 → 88</div>', unsafe_allow_html=True)
+        st.markdown('<div class="ea-section" style="text-align:right;color:#0EA4AF;">74 → 88</div>', unsafe_allow_html=True)
         st.button("Download plan", type="primary", width="stretch")
 
     progress_bar_card("Overall progress", 22, right_label="Week 3 of 12 · 22% done")
@@ -18,7 +18,7 @@ def render():
     cols = st.columns(3)
     for col, phase in zip(cols, ROADMAP_PHASES):
         with col:
-            border = "border-color:#6C5CE7;" if phase["status"] == "In progress" else ""
+            border = "border-color:#0EA4AF;" if phase["status"] == "In progress" else ""
             st.markdown(f"""
             <div class="ea-card" style="{border}">
                 <div style="display:flex;justify-content:space-between;">
@@ -37,7 +37,7 @@ def render():
     st.caption("Nothing starts before the skill it builds on is done")
     total_weeks = 12
     for track in ROADMAP_TIMELINE:
-        color = {"done": "#22C55E", "now": "#6C5CE7", "upcoming": "#E5E7EB"}[track["status"]]
+        color = {"done": "#22C55E", "now": "#0EA4AF", "upcoming": "#E5E7EB"}[track["status"]]
         left_pct = (track["start_week"] - 1) / total_weeks * 100
         width_pct = (track["end_week"] - track["start_week"]) / total_weeks * 100
         st.markdown(f"""
@@ -59,7 +59,7 @@ def render():
                 st.markdown(f'<div class="ea-card" style="margin-bottom:8px;">✅ {item["title"]}</div>', unsafe_allow_html=True)
             elif item["status"] == "active":
                 st.markdown(f"""
-                <div class="ea-card" style="border-color:#6C5CE7;margin-bottom:8px;">
+                <div class="ea-card" style="border-color:#0EA4AF;margin-bottom:8px;">
                     <b>{item['title']}</b><br/><span class="ea-small">{item['meta']}</span>
                 </div>
                 """, unsafe_allow_html=True)

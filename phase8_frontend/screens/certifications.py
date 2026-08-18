@@ -47,7 +47,7 @@ def render():
         import plotly.graph_objects as go
         fig = go.Figure(go.Scatter(
             x=durations, y=uplifts, mode="markers+text", text=names, textposition="top center",
-            marker=dict(size=[c / 800 for c in costs], color="#6C5CE7", opacity=0.75),
+            marker=dict(size=[c / 800 for c in costs], color="#0EA4AF", opacity=0.75),
         ))
         fig.update_layout(
             height=260, margin=dict(l=10, r=10, t=10, b=10),

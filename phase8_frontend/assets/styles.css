@@ -3,10 +3,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 :root {
-    --color-primary: #6C5CE7;
-    --color-secondary: #8B5CF6;
-    --color-gradient: linear-gradient(135deg, #6C5CE7 0%, #8B5CF6 100%);
-    --color-analytics: #3B82F6;
+    /* Primary/secondary from the 18 Aug review feedback: teal + light cyan,
+       replacing the earlier purple palette everywhere below. */
+    --color-primary: #0EA4AF;
+    --color-primary-dark: #0B7A82;
+    --color-secondary: #AFDDE5;
+    --color-gradient: linear-gradient(135deg, #0EA4AF 0%, #0B7A82 100%);
+    --color-analytics: #0EA4AF;
+
+    --color-accent-bg: #E3F5F7;
+    --color-accent-text: #0B7A82;
 
     --color-success: #22C55E;
     --color-success-bg: #DCFCE7;
@@ -20,8 +26,8 @@
     --color-error-bg: #FEE2E2;
     --color-error-text: #B91C1C;
 
-    --color-info-bg: #DBEAFE;
-    --color-info-text: #1D4ED8;
+    --color-info-bg: #E3F5F7;
+    --color-info-text: #0B7A82;
 
     --color-bg: #F8FAFC;
     --color-surface: #FFFFFF;
@@ -97,7 +103,7 @@ html, body, [class*="css"] {
 .ea-badge-warning { background: var(--color-warning-bg); color: var(--color-warning-text); }
 .ea-badge-error   { background: var(--color-error-bg);   color: var(--color-error-text); }
 .ea-badge-info    { background: var(--color-info-bg);    color: var(--color-info-text); }
-.ea-badge-purple  { background: #EDE9FE; color: #5B21B6; }
+.ea-badge-purple  { background: var(--color-accent-bg); color: var(--color-accent-text); }
 .ea-badge-neutral { background: #F3F4F6; color: #374151; }
 
 /* ---------- Progress bars ---------- */
@@ -140,15 +146,15 @@ html, body, [class*="css"] {
     justify-content: flex-start;
     color: #D1D5DB;
     font-weight: 500;
-    min-height: 38px;
-    padding-left: 4px;
+    min-height: 44px;
+    padding-left: 6px;
 }
 /* Nav rows are real st.container(key="nav-row-*") elements, so this
    selector reliably wraps the icon + button pair - unlike raw <div> tags
    opened/closed across separate st.markdown calls, which never nest. */
 [data-testid="stSidebar"] [class*="st-key-nav-row-"] {
     border-radius: 8px;
-    margin-bottom: 2px;
+    margin-bottom: 6px;
 }
 [data-testid="stSidebar"] [class*="st-key-nav-row-"]:hover {
     background: rgba(255,255,255,0.06);
@@ -161,7 +167,16 @@ html, body, [class*="css"] {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 38px;
+    height: 44px;
+}
+[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+    gap: 0 !important;
+}
+[data-testid="stSidebar"] .block-container,
+[data-testid="stSidebarUserContent"] {
+    padding-top: 20px;
+    padding-left: 14px;
+    padding-right: 14px;
 }
 /* The sidebar is narrow enough (200-320px) that Streamlit's own
    column-stacking breakpoint kicks in even though the icon+label row
@@ -187,7 +202,10 @@ html, body, [class*="css"] {
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #6B7280;
-    margin: var(--space-2) 0 4px 8px;
+    margin: 22px 0 10px 8px;
+}
+.ea-nav-group-label:first-of-type {
+    margin-top: 8px;
 }
 
 /* ---------- Mobile bottom nav (hidden by default, shown under 768px) ---------- */

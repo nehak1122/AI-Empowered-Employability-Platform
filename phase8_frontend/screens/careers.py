@@ -17,7 +17,7 @@ def render():
         with col:
             hero = role["status"] == "Ready now"
             status_kind = {"Ready now": "success", "2 gaps away": "warning", "Stretch": "neutral"}[role["status"]]
-            border = "border-color:#6C5CE7;" if hero else ""
+            border = "border-color:#0EA4AF;" if hero else ""
             skills_html = " ".join(f'<span class="ea-badge ea-badge-success">{s} ✓</span>' for s in role["skills_ok"])
             skills_html += " " + " ".join(f'<span class="ea-badge ea-badge-error">{s}</span>' for s in role["skills_gap"])
             st.markdown(f"""
@@ -25,7 +25,7 @@ def render():
                 <span class="ea-badge {'ea-badge-success' if status_kind=='success' else ('ea-badge-warning' if status_kind=='warning' else 'ea-badge-neutral')}">{role['status']}</span>
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
                     <div class="ea-section">{role['role']}</div>
-                    <div class="ea-big-number" style="font-size:24px;color:#6C5CE7;">{role['match']}%</div>
+                    <div class="ea-big-number" style="font-size:24px;color:#0EA4AF;">{role['match']}%</div>
                 </div>
                 <div style="margin-top:6px;">{skills_html}</div>
                 <div class="ea-small" style="margin-top:8px;">Expected salary <b>{role['salary']}</b></div>

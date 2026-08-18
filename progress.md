@@ -74,3 +74,48 @@ local commits only.
 **Next-day plan**
 Nothing scheduled yet — next steps depend on what the project lead wants reviewed first
 (a live walkthrough, or pushing once given the go-ahead).
+
+---
+
+## 2026-08-18
+
+Project lead sent detailed review feedback (16 items) covering colour theme, spacing,
+button placement, assessment flow, results, and per-page UI refinement across all 11
+screens. Given the 18–20 Aug timeline, splitting this across the three days rather than
+doing it all in one sitting — today is item 1 (colour palette) and item 6 (sidebar
+spacing), the two foundational changes everything else builds on.
+
+**Work completed**
+- Replaced the entire purple palette (`#6C5CE7` / `#8B5CF6`) with the requested teal/cyan
+  palette (`#0EA4AF` primary, `#AFDDE5` secondary) — updated the CSS design tokens first,
+  then swapped every hardcoded hex value across 9 files (`screens/login.py`,
+  `dashboard.py`, `roadmap.py`, `profile.py`, `careers.py`, `certifications.py`,
+  `components/charts.py`, `components/navigation.py`) so nothing was left on the old
+  colour by accident.
+- Kept the semantic status colours (green/amber/red for success/warning/error) as-is —
+  those carry meaning, not just decoration, so changing them wasn't part of "unify the
+  palette." Replaced the one purely decorative off-palette colour (a violet donut-chart
+  slice) with a teal-family shade instead.
+- Fixed sidebar crowding: nav row height 38px → 44px, spacing between rows 2px → 6px,
+  more breathing room around section labels (MAIN/INSIGHTS/OUTPUT) and sidebar padding.
+- Verified in the running app (not just reading the CSS) — Dashboard and Learning Roadmap
+  checked directly, other screens spot-checked via the shared component/token system
+  since they all pull from the same `styles.css` and `components/` — a colour-only change
+  doesn't need a full per-screen browser pass the way a layout change would.
+
+**Current progress**
+Colour palette and sidebar spacing done, consistent across the app. Remaining 14 items
+from the feedback (card alignment, button placement on Profile/Skill Gap/Assessment,
+assessment step flow + results page, domain selection at start, user-created ID,
+Employability Score chart cleanup, Roadmap/Certifications/Career Suggestions page
+redesigns, full cross-page consistency pass) are not started — deliberately, to keep
+today's slice real and reviewable rather than showing 14 half-finished changes.
+
+**Blockers / issues**
+None.
+
+**Next-day plan (19 Aug)**
+Card alignment/spacing pass, button repositioning (Save Changes → bottom of Profile,
+Submit Session → end of Assessment, Build Resume/Download Plan → end of Skill Gap flow),
+and the Assessment box/flow clarity work — these are the layout-level items and make
+sense to batch together before touching the deeper per-page content work on the 20th.

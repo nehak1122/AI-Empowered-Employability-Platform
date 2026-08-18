@@ -50,7 +50,7 @@ def render():
 
         st.markdown(
             '<div style="text-align:center;margin-top:12px;color:#6B7280;">First time here? '
-            '<span style="color:#6C5CE7;font-weight:600;">Create an account</span></div>',
+            '<span style="color:#0EA4AF;font-weight:600;">Create an account</span></div>',
             unsafe_allow_html=True,
         )
         st.caption("This is a static frontend preview — sign-in is a stand-in, no real auth or backend is wired up yet.")
