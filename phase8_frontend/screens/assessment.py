@@ -16,17 +16,28 @@ QUESTION = {
 
 
 def render():
-    top_l, top_r = st.columns([3, 1])
-    with top_l:
-        st.markdown('<div class="ea-heading">Cloud Computing — Technical</div>', unsafe_allow_html=True)
-        st.markdown('<div class="ea-body" style="color:#6B7280;">Section 3 of 4 — your answers save as you go.</div>', unsafe_allow_html=True)
-    with top_r:
-        st.button("Submit section", type="primary", width="stretch")
+    st.markdown("""
+    <div class="ea-card" style="background:var(--color-secondary);border:none;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
+            <div>
+                <div class="ea-section" style="color:var(--color-text-primary);">Cloud Computing — Technical assessment</div>
+                <div class="ea-body" style="color:var(--color-text-primary);margin-top:4px;">
+                    30 questions, single choice. Answer each one and move on — your progress saves automatically,
+                    so you can leave and pick up right where you left off.
+                </div>
+            </div>
+            <span class="ea-badge ea-badge-neutral">Section 3 of 4</span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
 
     main, sidebar = st.columns([2.4, 1])
 
     with main:
         st.progress(0.40, text="Question 12 of 30 · 40% complete")
+        st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
         with st.container(border=True):
             st.markdown(" ".join(f'<span class="ea-badge ea-badge-neutral">{t}</span>' for t in QUESTION["domain_tags"]), unsafe_allow_html=True)
             st.markdown(f'<div class="ea-body" style="margin-top:10px;font-weight:600;">{QUESTION["text"]}</div>', unsafe_allow_html=True)
@@ -34,14 +45,26 @@ def render():
                 "options", [f"{k} · {v}" for k, v in QUESTION["options"]],
                 index=1, label_visibility="collapsed",
             )
-            st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
             st.radio("How sure are you?", ["Guessing", "Fairly sure", "Certain"], index=1, horizontal=True)
 
-            st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
             nav1, nav2, nav3 = st.columns([1, 1, 1])
             nav1.button("← Previous", width="stretch")
             nav2.markdown('<div style="text-align:center;color:#22C55E;padding-top:8px;">Saved</div>', unsafe_allow_html=True)
             nav3.button("Next question →", type="primary", width="stretch")
+
+        st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+        st.markdown(
+            '<div class="ea-small">Once you have answered all 30 questions in this section, '
+            'the button below unlocks.</div>',
+            unsafe_allow_html=True,
+        )
+        st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+        st.button(
+            "Submit section (18 questions left)",
+            type="primary", disabled=True, width="stretch", key="submit-section-bottom",
+        )
 
     with sidebar:
         st.markdown('<div class="ea-section">Your sections</div>', unsafe_allow_html=True)
@@ -53,7 +76,7 @@ def render():
                     kind = "success" if s["status"] == "Done" else ("purple" if s["status"] == "In progress" else "neutral")
                     badge(s["score"], kind)
 
-        st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
         st.markdown('<div class="ea-section">Domain</div>', unsafe_allow_html=True)
         with st.container(border=True):
             st.radio("domain", ["Cloud Computing", "Cybersecurity"], index=0, label_visibility="collapsed")

@@ -7,14 +7,10 @@ from data.dummy_data import (
 
 
 def render():
-    left, right = st.columns([3, 1])
-    with left:
-        st.markdown('<div class="ea-heading">Student Profile</div>', unsafe_allow_html=True)
-        st.markdown('<div class="ea-body" style="color:#6B7280;">All of this feeds into your score. Three sections still need a bit of attention.</div>', unsafe_allow_html=True)
-    with right:
-        st.button("Save changes", type="primary", width="stretch")
+    st.markdown('<div class="ea-heading">Student Profile</div>', unsafe_allow_html=True)
+    st.markdown('<div class="ea-body" style="color:#6B7280;">All of this feeds into your score. Three sections still need a bit of attention.</div>', unsafe_allow_html=True)
 
-    st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     hc1, hc2 = st.columns([3, 1])
     with hc1:
         st.markdown(f"""
@@ -36,7 +32,7 @@ def render():
         </div>
         """, unsafe_allow_html=True)
 
-    st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     step_html = ""
     for i, step in enumerate(PROFILE_STEPS, start=1):
         if step["status"] == "done":
@@ -63,7 +59,7 @@ def render():
             f3.text_input("Email", value=STUDENT["email"])
             f4.text_input("Phone", value=STUDENT["phone"])
 
-        st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
         st.markdown('<div class="ea-section">Education</div>', unsafe_allow_html=True)
         with st.container(border=True):
             for edu in EDUCATION:
@@ -71,7 +67,7 @@ def render():
                 e1.markdown(f'<b>{edu["level"]}</b><br/><span class="ea-small">{edu["meta"]}</span>', unsafe_allow_html=True)
                 e2.markdown(f'<div style="text-align:right;padding-top:6px;font-weight:600;">{edu["score"]}</div>', unsafe_allow_html=True)
 
-        st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
         st.markdown('<div class="ea-section">Projects <span style="font-weight:400;">(1 of 3)</span></div>', unsafe_allow_html=True)
         with st.container(border=True):
             for p in PROJECTS:
@@ -90,7 +86,7 @@ def render():
             st.markdown(tag_html, unsafe_allow_html=True)
             st.button("+ Add skill", key="add_skill")
 
-        st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
         st.markdown('<div class="ea-section">Certifications <span style="font-weight:400;">(2 held)</span></div>', unsafe_allow_html=True)
         with st.container(border=True):
             for c in CERTIFICATIONS_HELD:
@@ -99,7 +95,7 @@ def render():
                 with cc2:
                     badge(c["status"], "success")
 
-        st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
         st.markdown('<div class="ea-section">Resume</div>', unsafe_allow_html=True)
         with st.container(border=True):
             rc1, rc2 = st.columns([3, 1])
@@ -107,9 +103,17 @@ def render():
             with rc2:
                 badge(f"Score {RESUME['score']}", "warning")
 
-        st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
         st.markdown('<div class="ea-section">Internships</div>', unsafe_allow_html=True)
         with st.container(border=True):
             badge("Empty", "error")
             st.caption("Even a two-week stint counts. 41 of the 74 postings we track ask for one.")
             st.button("Add internship", type="primary", width="stretch")
+
+    st.markdown("<div style='height:24px'></div>", unsafe_allow_html=True)
+    st.markdown('<hr style="border:none;border-top:1px solid var(--color-border);margin:0 0 16px 0;">', unsafe_allow_html=True)
+    save_l, save_r = st.columns([3, 1])
+    with save_l:
+        st.caption("Changes save to your profile and feed straight into your employability score.")
+    with save_r:
+        st.button("Save changes", type="primary", key="save-changes-bottom", width="stretch")

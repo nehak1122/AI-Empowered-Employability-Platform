@@ -45,7 +45,7 @@ def render():
             </div>
             """, unsafe_allow_html=True)
 
-    st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     m1, m2, m3, m4 = st.columns(4)
     for col, (label, value, hint) in zip(
         [m1, m2, m3, m4],

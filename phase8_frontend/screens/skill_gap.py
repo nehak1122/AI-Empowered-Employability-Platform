@@ -6,12 +6,9 @@ from data.dummy_data import SKILL_GAP_ROWS, RADAR_ROLE
 
 
 def render():
-    top_l, top_r = st.columns([3, 1])
-    with top_l:
-        st.markdown('<div class="ea-heading">Skill Gap Analysis</div>', unsafe_allow_html=True)
-        st.markdown('<div class="ea-body" style="color:#6B7280;">How you compare against 74 live job postings for Cloud Support Associate.</div>', unsafe_allow_html=True)
-    with top_r:
-        st.button("Build my roadmap →", type="primary", width="stretch")
+    st.markdown('<div class="ea-heading">Skill Gap Analysis</div>', unsafe_allow_html=True)
+    st.markdown('<div class="ea-body" style="color:#6B7280;">How you compare against 74 live job postings for Cloud Support Associate.</div>', unsafe_allow_html=True)
+    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
 
     high = sum(1 for r in SKILL_GAP_ROWS if r["priority"] == "High")
     medium = sum(1 for r in SKILL_GAP_ROWS if r["priority"] == "Medium")
@@ -41,7 +38,7 @@ def render():
         </div>
         """, unsafe_allow_html=True)
 
-    st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     left, right = st.columns([1, 1.3])
     with left:
         st.markdown('<div class="ea-section">Your profile against the role</div>', unsafe_allow_html=True)
@@ -85,3 +82,15 @@ def render():
         """
 
     responsive_table(headers, rows, mobile_row)
+
+    st.markdown("<div style='height:24px'></div>", unsafe_allow_html=True)
+    st.markdown('<hr style="border:none;border-top:1px solid var(--color-border);margin:0 0 16px 0;">', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="ea-small">Reviewed everything above? Turn it into a plan, '
+        'or take a copy with you.</div>',
+        unsafe_allow_html=True,
+    )
+    st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+    b1, b2 = st.columns([1, 1])
+    b1.button("Download plan", key="download-plan-bottom", width="stretch")
+    b2.button("Build my roadmap →", type="primary", key="build-roadmap-bottom", width="stretch")

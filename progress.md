@@ -119,3 +119,44 @@ Card alignment/spacing pass, button repositioning (Save Changes → bottom of Pr
 Submit Session → end of Assessment, Build Resume/Download Plan → end of Skill Gap flow),
 and the Assessment box/flow clarity work — these are the layout-level items and make
 sense to batch together before touching the deeper per-page content work on the 20th.
+
+---
+
+## 2026-08-19
+
+**Work completed**
+- Moved "Save changes" on the Profile page from the top-right (item 3) to a footer bar at
+  the bottom of the page, with a one-line caption explaining what it does.
+- Moved "Submit section" on the Assessment page from the top-right to the bottom of the
+  question flow (item 4), disabled until all 30 questions are answered, with a line above
+  it explaining why it's greyed out. Also rebuilt the top of the page into a clear intro
+  banner — what the assessment is, how many questions, current section — instead of just
+  a bare title (item 5).
+- On Skill Gap, moved "Download plan" and "Build my roadmap" from the top-right to a
+  footer action bar after the full gap table, so both only appear once there's something
+  to act on (item 12).
+- Standardised spacer heights across `profile.py`, `score.py`, `settings.py` to the
+  design system's allowed spacing values (8/16/24/32/48px) — a few screens had stray
+  12px/6px gaps left over from earlier passes.
+- Tested all three changed screens in the running app after editing, not just read the
+  code — clicked into Profile, Assessment, and Skill Gap, confirmed the buttons render
+  and behave correctly at their new positions, and checked the server logs for errors
+  (none found).
+
+**Current progress**
+5 of 16 review items done (colour palette, sidebar spacing, Save Changes placement,
+Submit Session placement, Skill Gap CTA placement) plus the assessment box clarity work.
+Remaining: full card alignment/spacing audit across the rest of the app, the step-by-step
+assessment flow itself (item 7), the results page (item 8), domain selection at the start
+(item 9), user-created ID (item 10), Employability Score chart cleanup (item 11), and the
+Roadmap/Certifications/Career Suggestions redesigns (items 13-15) — saved for the 20th.
+
+**Blockers / issues**
+None.
+
+**Next-day plan (20 Aug)**
+The remaining content-level items: assessment step flow + domain selection at the start,
+a proper results page at the end of the assessment, user ID creation during setup, the
+Employability Score page cleanup, and the Roadmap/Certifications/Career Suggestions UI
+passes — then a final cross-page consistency check against all 16 items before calling
+the review done.
