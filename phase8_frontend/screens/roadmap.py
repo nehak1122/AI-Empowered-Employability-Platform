@@ -1,5 +1,5 @@
 import streamlit as st
-from components.cards import progress_bar_card
+from components.cards import progress_bar_card, icon_header
 from data.dummy_data import ROADMAP_PHASES, ROADMAP_TIMELINE, THIS_WEEK, RECOMMENDATIONS
 
 
@@ -42,27 +42,28 @@ def render():
             progress_bar_card("", phase["progress"], right_label=f"{phase['progress']}%")
 
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-    st.markdown('<div class="ea-section">Your twelve weeks</div>', unsafe_allow_html=True)
+    icon_header("roadmap", "Your twelve weeks")
     st.caption("Nothing starts before the skill it builds on is done")
-    total_weeks = 12
-    for track in ROADMAP_TIMELINE:
-        color = {"done": "#22C55E", "now": "#0EA4AF", "upcoming": "#E5E7EB"}[track["status"]]
-        left_pct = (track["start_week"] - 1) / total_weeks * 100
-        width_pct = (track["end_week"] - track["start_week"]) / total_weeks * 100
-        st.markdown(f"""
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-            <div style="width:140px;font-size:13px;">{track['track']}</div>
-            <div style="flex:1;background:#F3F4F6;border-radius:6px;height:14px;position:relative;">
-                <div style="position:absolute;left:{left_pct}%;width:{width_pct}%;background:{color};height:100%;border-radius:6px;"></div>
+    with st.container(border=True):
+        total_weeks = 12
+        for track in ROADMAP_TIMELINE:
+            color = {"done": "var(--color-primary-dark)", "now": "var(--color-primary)", "upcoming": "#E5E7EB"}[track["status"]]
+            left_pct = (track["start_week"] - 1) / total_weeks * 100
+            width_pct = (track["end_week"] - track["start_week"]) / total_weeks * 100
+            st.markdown(f"""
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                <div style="width:140px;font-size:13px;">{track['track']}</div>
+                <div style="flex:1;background:#F3F4F6;border-radius:6px;height:14px;position:relative;">
+                    <div style="position:absolute;left:{left_pct}%;width:{width_pct}%;background:{color};height:100%;border-radius:6px;"></div>
+                </div>
+                <div style="width:70px;font-size:12px;color:#6B7280;">W{track['start_week']}-{track['end_week']}</div>
             </div>
-            <div style="width:70px;font-size:12px;color:#6B7280;">W{track['start_week']}-{track['end_week']}</div>
-        </div>
-        """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
 
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     left, right = st.columns(2)
     with left:
-        st.markdown('<div class="ea-section">What you are on this week</div>', unsafe_allow_html=True)
+        icon_header("assessment", "What you are on this week")
         with st.container(border=True):
             for item in THIS_WEEK:
                 if item["status"] == "done":
@@ -78,7 +79,7 @@ def render():
                     st.markdown(f'<div style="margin-bottom:10px;color:#9CA3AF;">{item["title"]}</div>', unsafe_allow_html=True)
 
     with right:
-        st.markdown('<div class="ea-section">Courses that would help</div>', unsafe_allow_html=True)
+        icon_header("book", "Courses that would help")
         with st.container(border=True):
             for c in RECOMMENDATIONS:
                 st.markdown(f"""

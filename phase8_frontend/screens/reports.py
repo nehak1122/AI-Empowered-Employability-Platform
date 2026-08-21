@@ -1,4 +1,6 @@
 import streamlit as st
+from components.cards import icon_header
+from components.icons import icon
 from data.dummy_data import REPORT_CONTENTS, REPORT_HISTORY
 
 
@@ -12,10 +14,13 @@ def render():
 
     c1, c2, c3 = st.columns(3)
     with c1:
-        st.markdown("""
+        st.markdown(f"""
         <div class="ea-card">
             <div style="display:flex;justify-content:space-between;">
-                <div class="ea-section">📄 The full report</div>
+                <div class="ea-header-row" style="margin-bottom:0;">
+                    <div class="ea-icon-badge">{icon('reports', 'var(--color-primary)')}</div>
+                    <div class="ea-section" style="font-size:18px;">The full report</div>
+                </div>
                 <span class="ea-badge ea-badge-purple">Recommended</span>
             </div>
             <div class="ea-small" style="margin-top:6px;">Your score, the skills you're missing, your plan and the roles you're closest to.</div>
@@ -33,9 +38,12 @@ def render():
         b3.button("Print", key="prt")
 
     with c2:
-        st.markdown("""
+        st.markdown(f"""
         <div class="ea-card">
-            <div class="ea-section">📈 Progress summary</div>
+            <div class="ea-header-row">
+                <div class="ea-icon-badge">{icon('trend', 'var(--color-primary)')}</div>
+                <div class="ea-section" style="font-size:18px;">Progress summary</div>
+            </div>
             <div class="ea-small" style="margin-top:6px;">Six months of progress on three pages. Handy for a mentor or a review meeting.</div>
             <div class="ea-small" style="margin-top:10px;">Format &nbsp; PDF · A4<br/>Period &nbsp; Feb - Jul 2026</div>
         </div>
@@ -43,9 +51,12 @@ def render():
         st.button("Download progress report", key="dl-progress", width="stretch")
 
     with c3:
-        st.markdown("""
+        st.markdown(f"""
         <div class="ea-card">
-            <div class="ea-section">🔗 Send someone a link</div>
+            <div class="ea-header-row">
+                <div class="ea-icon-badge">{icon('link', 'var(--color-primary)')}</div>
+                <div class="ea-section" style="font-size:18px;">Send someone a link</div>
+            </div>
             <div class="ea-small" style="margin-top:6px;">A page anyone can view but nobody can edit. You choose what's on it.</div>
         </div>
         """, unsafe_allow_html=True)
@@ -57,7 +68,7 @@ def render():
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     left, right = st.columns([1.6, 1])
     with left:
-        st.markdown('<div class="ea-section">Reports you have made before</div>', unsafe_allow_html=True)
+        icon_header("reports", "Reports you have made before")
         for r in REPORT_HISTORY:
             st.markdown(f"""
             <div class="ea-card" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -69,7 +80,7 @@ def render():
             """, unsafe_allow_html=True)
 
     with right:
-        st.markdown('<div class="ea-section">What goes in it</div>', unsafe_allow_html=True)
+        icon_header("settings", "What goes in it")
         st.caption("Untick anything you'd rather keep to yourself")
         for item in REPORT_CONTENTS:
             st.checkbox(item["item"], value=item["included"], key=f"inc-{item['item']}")

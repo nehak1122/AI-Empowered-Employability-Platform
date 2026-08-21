@@ -1,6 +1,6 @@
 import streamlit as st
 from components.badges import badge
-from components.cards import progress_bar_card
+from components.cards import progress_bar_card, icon_header
 from components import charts
 from data.dummy_data import ASSESSMENT_SECTIONS, ASSESSMENT_DOMAINS, ASSESSMENT_RESULT
 
@@ -128,7 +128,7 @@ def _render_question_flow():
             st.rerun()
 
     with sidebar:
-        st.markdown('<div class="ea-section">Your sections</div>', unsafe_allow_html=True)
+        icon_header("assessment", "Your sections")
         with st.container(border=True):
             for s in ASSESSMENT_SECTIONS:
                 c1, c2 = st.columns([2, 1])
@@ -138,7 +138,7 @@ def _render_question_flow():
                     badge(s["score"], kind)
 
         st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-        st.markdown('<div class="ea-section">Domain</div>', unsafe_allow_html=True)
+        icon_header("grid", "Domain")
         with st.container(border=True):
             st.markdown(f'<b>{domain_name}</b>', unsafe_allow_html=True)
             st.caption("Switching domain restarts this section.")
@@ -164,18 +164,19 @@ def _render_results():
         """, unsafe_allow_html=True)
 
     with right:
-        st.markdown('<div class="ea-section">How each section scored</div>', unsafe_allow_html=True)
-        charts.bar([s["name"] for s in ASSESSMENT_RESULT["sections"]], [s["score"] for s in ASSESSMENT_RESULT["sections"]], warn_below=60)
+        icon_header("analytics", "How each section scored")
+        with st.container(border=True):
+            charts.bar([s["name"] for s in ASSESSMENT_RESULT["sections"]], [s["score"] for s in ASSESSMENT_RESULT["sections"]], warn_below=60)
 
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     c1, c2 = st.columns(2)
     with c1:
-        st.markdown('<div class="ea-section">Strengths</div>', unsafe_allow_html=True)
+        icon_header("check-circle", "Strengths")
         with st.container(border=True):
             for s in ASSESSMENT_RESULT["strengths"]:
                 st.markdown(f'<div class="ea-body" style="margin-bottom:8px;">✅ {s}</div>', unsafe_allow_html=True)
     with c2:
-        st.markdown('<div class="ea-section">Where you lost points</div>', unsafe_allow_html=True)
+        icon_header("alert", "Where you lost points")
         with st.container(border=True):
             for w in ASSESSMENT_RESULT["weaknesses"]:
                 st.markdown(f'<div class="ea-body" style="margin-bottom:8px;">⚠️ {w}</div>', unsafe_allow_html=True)

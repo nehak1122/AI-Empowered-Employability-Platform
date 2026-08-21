@@ -22,6 +22,13 @@ ICONS = {
     "search": f'<svg {_ATTRS}><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/></svg>',
     "bell": f'<svg {_ATTRS}><path d="M6 17h12l-1.4-2A6.5 6.5 0 0 1 15.5 11V9.5a3.5 3.5 0 0 0-7 0V11a6.5 6.5 0 0 1-1.1 4Z"/><path d="M10.3 20a1.8 1.8 0 0 0 3.4 0"/></svg>',
     "logout": f'<svg {_ATTRS}><path d="M9 5H6.5A1.5 1.5 0 0 0 5 6.5v11A1.5 1.5 0 0 0 6.5 19H9"/><path d="M14 16l4-4-4-4"/><path d="M18 12H9"/></svg>',
+    "book": f'<svg {_ATTRS}><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5Z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5Z"/></svg>',
+    "folder": f'<svg {_ATTRS}><path d="M4 6.5A1.5 1.5 0 0 1 5.5 5h4l2 2.5h8A1.5 1.5 0 0 1 21 9v8.5A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5v-11A1.5 1.5 0 0 1 4 6.5Z"/></svg>',
+    "trend": f'<svg {_ATTRS}><path d="m3 16 6-6 4 4 8-9"/><path d="M15 5h6v6"/></svg>',
+    "check-circle": f'<svg {_ATTRS}><circle cx="12" cy="12" r="8.5"/><path d="m8.5 12.5 2.3 2.3 4.7-5.1"/></svg>',
+    "alert": f'<svg {_ATTRS}><path d="M12 4 3 19h18Z"/><path d="M12 10v4"/><circle cx="12" cy="16.5" r="0.6" fill="currentColor" stroke="none"/></svg>',
+    "grid": f'<svg {_ATTRS}><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>',
+    "link": f'<svg {_ATTRS}><path d="M10 14a4.5 4.5 0 0 0 6.4.3l2-2a4.5 4.5 0 0 0-6.4-6.4l-1.1 1.1"/><path d="M14 10a4.5 4.5 0 0 0-6.4-.3l-2 2a4.5 4.5 0 0 0 6.4 6.4l1.1-1.1"/></svg>',
 }
 
 BOTTOM_NAV_ICONS = {

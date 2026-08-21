@@ -1,7 +1,7 @@
 import streamlit as st
 from components import charts
-from components.cards import score_hero_card, progress_bar_card
-from components.badges import badge
+from components.cards import score_hero_card, progress_bar_card, icon_header
+from components.icons import icon
 from data.dummy_data import (
     STUDENT, SCORE, SCORE_HISTORY, SKILLS_OVERVIEW, QUICK_ACTIONS,
     RECENT_ACTIVITY, JOB_MATCHES,
@@ -9,28 +9,25 @@ from data.dummy_data import (
 
 
 def render():
-    top_l, top_r = st.columns([3, 1])
-    with top_l:
-        st.markdown(f'<div class="ea-heading">Good evening, {STUDENT["name"].split()[0]} 👋</div>', unsafe_allow_html=True)
-        st.markdown(
-            f'<div class="ea-body" style="color:#6B7280;margin-top:4px;">'
-            f'Great progress — your score went up {SCORE["points_this_week"]} points this week. '
-            f'You are only 2 skills away from being ready for a Cloud Support Associate role.</div>',
-            unsafe_allow_html=True,
-        )
-    with top_r:
-        st.button("Continue assessment →", type="primary", width="stretch")
+    st.markdown(f'<div class="ea-heading">Good evening, {STUDENT["name"].split()[0]} 👋</div>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="ea-body" style="color:#6B7280;margin-top:4px;">'
+        f'Great progress — your score went up {SCORE["points_this_week"]} points this week. '
+        f'You are only 2 skills away from being ready for a Cloud Support Associate role.</div>',
+        unsafe_allow_html=True,
+    )
 
+    st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
     st.text_input("Search", placeholder="Search skills, roles, courses…", label_visibility="collapsed")
 
-    st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     qa_cols = st.columns(len(QUICK_ACTIONS))
     for col, action in zip(qa_cols, QUICK_ACTIONS):
         with col:
             st.markdown(f"""
             <div class="ea-card" style="text-align:left;">
-                <div style="font-size:20px;">{action['icon']}</div>
-                <div class="ea-body" style="font-weight:600;margin-top:6px;">{action['label']}</div>
+                <div class="ea-icon-badge" style="margin-bottom:8px;">{action['icon']}</div>
+                <div class="ea-body" style="font-weight:600;">{action['label']}</div>
                 <div class="ea-small">{action['hint']}</div>
             </div>
             """, unsafe_allow_html=True)
@@ -49,32 +46,47 @@ def render():
         """, unsafe_allow_html=True)
     with c3:
         st.markdown("""
-        <div class="ea-card" style="border-color:#0EA4AF;">
+        <div class="ea-card" style="border-color:var(--color-primary);background:var(--color-accent-bg);">
             <div class="ea-card-kicker">⚡ Today's goal</div>
             <div class="ea-body" style="font-weight:600;">Start the Terraform module</div>
             <div class="ea-small">Worth around 7 points, ~3 weeks of work.</div>
         </div>
         """, unsafe_allow_html=True)
 
-    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     left, right = st.columns([1.4, 1])
     with left:
-        st.markdown('<div class="ea-section">Score over time</div>', unsafe_allow_html=True)
+        icon_header("analytics", "Score over time")
         st.caption("Every score you've had since February")
-        charts.line(SCORE_HISTORY["months"], SCORE_HISTORY["student"], SCORE_HISTORY["cohort"], SCORE_HISTORY["target"])
+        with st.container(border=True):
+            charts.line(SCORE_HISTORY["months"], SCORE_HISTORY["student"], SCORE_HISTORY["cohort"], SCORE_HISTORY["target"])
     with right:
-        st.markdown('<div class="ea-section">Skill overview</div>', unsafe_allow_html=True)
-        for s in SKILLS_OVERVIEW:
-            tone = "success" if s["level"] == "Strong" else ("warning" if s["level"] == "Growing" else "error")
-            progress_bar_card(s["skill"], round(s["score"] / s["max"] * 100), right_label=s["level"], tone=tone)
+        icon_header("skill_gap", "Skill overview")
+        with st.container(border=True):
+            for s in SKILLS_OVERVIEW:
+                progress_bar_card(s["skill"], round(s["score"] / s["max"] * 100), right_label=s["level"])
 
-    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     c1, c2 = st.columns(2)
     with c1:
-        st.markdown('<div class="ea-section">Job match</div>', unsafe_allow_html=True)
-        for j in JOB_MATCHES:
-            progress_bar_card(j["role"], j["match"])
+        icon_header("careers", "Job match")
+        with st.container(border=True):
+            for j in JOB_MATCHES:
+                progress_bar_card(j["role"], j["match"])
     with c2:
-        st.markdown('<div class="ea-section">Recent activity</div>', unsafe_allow_html=True)
-        for a in RECENT_ACTIVITY:
-            st.markdown(f'<div class="ea-body" style="margin-bottom:8px;">• {a["text"]}<br/><span class="ea-small">{a["when"]}</span></div>', unsafe_allow_html=True)
+        icon_header("bell", "Recent activity")
+        with st.container(border=True):
+            for a in RECENT_ACTIVITY:
+                st.markdown(f'<div class="ea-body" style="margin-bottom:8px;">• {a["text"]}<br/><span class="ea-small">{a["when"]}</span></div>', unsafe_allow_html=True)
+
+    st.markdown("<div style='height:24px'></div>", unsafe_allow_html=True)
+    with st.container(key="dashboard-cta"):
+        text_col, btn_col = st.columns([3, 1], vertical_alignment="center")
+        with text_col:
+            st.markdown(
+                '<div class="ea-section" style="color:#fff;">Continue your assessment</div>'
+                '<div class="ea-small">Technical section - 12 of 30 done. About 15 minutes left.</div>',
+                unsafe_allow_html=True,
+            )
+        with btn_col:
+            st.button("Continue assessment →", type="primary", key="continue-assessment-bottom", width="stretch")

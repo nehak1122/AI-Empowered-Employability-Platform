@@ -1,6 +1,7 @@
 import streamlit as st
 from components import charts
 from components.badges import priority_badge_html
+from components.cards import icon_header
 from components.tables import responsive_table
 from data.dummy_data import SKILL_GAP_ROWS, RADAR_ROLE
 
@@ -25,42 +26,43 @@ def render():
         """, unsafe_allow_html=True)
     with c2:
         st.markdown(f"""
-        <div class="ea-card" style="text-align:center;">
+        <div class="ea-card" style="text-align:center;border-color:var(--color-primary);">
             <div class="ea-small">Must fix</div>
-            <div class="ea-big-number" style="font-size:28px;color:#EF4444;">{high}</div>
+            <div class="ea-big-number" style="font-size:28px;color:var(--color-primary);">{high}</div>
         </div>
         """, unsafe_allow_html=True)
     with c3:
         st.markdown(f"""
         <div class="ea-card" style="text-align:center;">
             <div class="ea-small">Already met</div>
-            <div class="ea-big-number" style="font-size:28px;color:#22C55E;">{met}</div>
+            <div class="ea-big-number" style="font-size:28px;color:var(--color-primary);">{met}</div>
         </div>
         """, unsafe_allow_html=True)
 
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     left, right = st.columns([1, 1.3])
     with left:
-        st.markdown('<div class="ea-section">Your profile against the role</div>', unsafe_allow_html=True)
+        icon_header("skill_gap", "Your profile against the role")
         st.caption("The six things this role weighs most")
-        charts.radar(RADAR_ROLE["categories"], RADAR_ROLE["you"], RADAR_ROLE["role_requires"], "Role requires")
+        with st.container(border=True):
+            charts.radar(RADAR_ROLE["categories"], RADAR_ROLE["you"], RADAR_ROLE["role_requires"], "Role requires")
     with right:
-        st.markdown('<div class="ea-section">What is needed against what you have</div>', unsafe_allow_html=True)
+        icon_header("trend", "What is needed against what you have")
         st.caption("Sorted by how much each gap is costing your score")
-        for row in sorted(SKILL_GAP_ROWS, key=lambda r: r["impact"]):
-            pct = 100 if row["priority"] == "Met" else min(abs(row["impact"]) * 12, 100)
-            color = "#22C55E" if row["priority"] == "Met" else ("#EF4444" if row["priority"] == "High" else "#F59E0B")
-            st.markdown(f"""
-            <div style="margin-bottom:8px;">
-                <div style="display:flex;justify-content:space-between;font-size:14px;">
-                    <span>{row['skill']}</span>{priority_badge_html(row['priority'])}
+        with st.container(border=True):
+            for row in sorted(SKILL_GAP_ROWS, key=lambda r: r["impact"]):
+                pct = 100 if row["priority"] == "Met" else min(abs(row["impact"]) * 12, 100)
+                st.markdown(f"""
+                <div style="margin-bottom:12px;">
+                    <div style="display:flex;justify-content:space-between;font-size:14px;">
+                        <span>{row['skill']}</span>{priority_badge_html(row['priority'])}
+                    </div>
+                    <div class="ea-progress-track"><div class="ea-progress-fill" style="width:{pct}%;"></div></div>
                 </div>
-                <div class="ea-progress-track"><div class="ea-progress-fill" style="width:{pct}%;background:{color};"></div></div>
-            </div>
-            """, unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
 
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-    st.markdown('<div class="ea-section">Every gap, and what to do about it</div>', unsafe_allow_html=True)
+    icon_header("assessment", "Every gap, and what to do about it")
     st.caption("Based on job postings last refreshed on 28 July")
 
     headers = ["Skill", "Asked in", "Required", "You have", "Priority", "Suggested improvement"]

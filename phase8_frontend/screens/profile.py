@@ -1,6 +1,6 @@
 import streamlit as st
 from components.badges import badge
-from components.cards import section_header
+from components.cards import icon_header
 from data.dummy_data import (
     STUDENT, PROFILE_STEPS, EDUCATION, SKILLS, CERTIFICATIONS_HELD, PROJECTS, RESUME,
 )
@@ -35,22 +35,23 @@ def render():
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     step_html = ""
     for i, step in enumerate(PROFILE_STEPS, start=1):
-        if step["status"] == "done":
-            marker = f'<div style="width:22px;height:22px;border-radius:999px;background:#22C55E;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;">✓</div>'
-        elif step["status"] == "current":
-            marker = f'<div style="width:22px;height:22px;border-radius:999px;background:#0EA4AF;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;">{i}</div>'
-        else:
-            marker = f'<div style="width:22px;height:22px;border-radius:999px;background:#E5E7EB;color:#6B7280;font-size:12px;display:flex;align-items:center;justify-content:center;">{i}</div>'
-        label_color = "#111827" if step["status"] != "pending" else "#9CA3AF"
-        step_html += f'<div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:90px;">{marker}<span style="font-size:12px;color:{label_color};text-align:center;">{step["label"]}</span></div>'
+        dot_class = {"done": "done", "current": "current"}.get(step["status"], "pending")
+        dot_content = "✓" if step["status"] == "done" else str(i)
+        label_color = "var(--color-text-primary)" if step["status"] != "pending" else "#9CA3AF"
+        step_html += (
+            f'<div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:90px;">'
+            f'<div class="ea-step-dot {dot_class}">{dot_content}</div>'
+            f'<span style="font-size:12px;color:{label_color};text-align:center;">{step["label"]}</span></div>'
+        )
         if i < len(PROFILE_STEPS):
-            step_html += '<div style="flex:1;height:2px;background:#E5E7EB;margin-top:11px;"></div>'
+            line_color = "var(--color-success)" if step["status"] == "done" else "var(--color-border)"
+            step_html += f'<div style="flex:1;height:2px;background:{line_color};margin-top:11px;"></div>'
     st.markdown(f'<div class="ea-card" style="display:flex;align-items:flex-start;gap:4px;">{step_html}</div>', unsafe_allow_html=True)
 
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     c1, c2 = st.columns(2)
     with c1:
-        st.markdown('<div class="ea-section">Personal information</div>', unsafe_allow_html=True)
+        icon_header("profile", "Personal information")
         with st.container(border=True):
             f1, f2 = st.columns(2)
             f1.text_input("Full name", value=STUDENT["name"])
@@ -60,7 +61,7 @@ def render():
             f4.text_input("Phone", value=STUDENT["phone"])
 
         st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-        st.markdown('<div class="ea-section">Education</div>', unsafe_allow_html=True)
+        icon_header("book", "Education")
         with st.container(border=True):
             for edu in EDUCATION:
                 e1, e2 = st.columns([3, 1])
@@ -68,7 +69,7 @@ def render():
                 e2.markdown(f'<div style="text-align:right;padding-top:6px;font-weight:600;">{edu["score"]}</div>', unsafe_allow_html=True)
 
         st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-        st.markdown('<div class="ea-section">Projects <span style="font-weight:400;">(1 of 3)</span></div>', unsafe_allow_html=True)
+        icon_header("folder", "Projects (1 of 3)")
         with st.container(border=True):
             for p in PROJECTS:
                 st.markdown(f'<b>{p["title"]}</b> <span class="ea-small">· {p["meta"]}</span>', unsafe_allow_html=True)
@@ -77,7 +78,7 @@ def render():
             st.button("+ Add a project", width="stretch")
 
     with c2:
-        st.markdown('<div class="ea-section">Skills</div>', unsafe_allow_html=True)
+        icon_header("skill_gap", "Skills")
         with st.container(border=True):
             tag_html = ""
             for s in SKILLS:
@@ -87,7 +88,7 @@ def render():
             st.button("+ Add skill", key="add_skill")
 
         st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-        st.markdown('<div class="ea-section">Certifications <span style="font-weight:400;">(2 held)</span></div>', unsafe_allow_html=True)
+        icon_header("certifications", "Certifications (2 held)")
         with st.container(border=True):
             for c in CERTIFICATIONS_HELD:
                 cc1, cc2 = st.columns([3, 1])
@@ -96,7 +97,7 @@ def render():
                     badge(c["status"], "success")
 
         st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-        st.markdown('<div class="ea-section">Resume</div>', unsafe_allow_html=True)
+        icon_header("reports", "Resume")
         with st.container(border=True):
             rc1, rc2 = st.columns([3, 1])
             rc1.markdown(f'📄 <b>{RESUME["filename"]}</b><br/><span class="ea-small">{RESUME["meta"]}</span>', unsafe_allow_html=True)
@@ -104,7 +105,7 @@ def render():
                 badge(f"Score {RESUME['score']}", "warning")
 
         st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-        st.markdown('<div class="ea-section">Internships</div>', unsafe_allow_html=True)
+        icon_header("careers", "Internships")
         with st.container(border=True):
             badge("Empty", "error")
             st.caption("Even a two-week stint counts. 41 of the 74 postings we track ask for one.")

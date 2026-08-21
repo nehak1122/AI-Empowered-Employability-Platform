@@ -2,6 +2,7 @@ import streamlit as st
 from components import charts
 from data.dummy_data import CERT_RECOMMENDATIONS, CERT_TABLE
 from components.tables import responsive_table
+from components.cards import icon_header
 
 
 def render():
@@ -38,7 +39,7 @@ def render():
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     left, right = st.columns([1, 1.4])
     with left:
-        st.markdown('<div class="ea-section">Is it worth the time?</div>', unsafe_allow_html=True)
+        icon_header("trend", "Is it worth the time?")
         st.caption("Bigger bubble means a pricier exam. Top-left is where you want to be.")
         durations = [8, 4, 12, 3]
         uplifts = [9, 6, 7, 3]
@@ -58,7 +59,7 @@ def render():
             st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
 
     with right:
-        st.markdown('<div class="ea-section">All of them side by side</div>', unsafe_allow_html=True)
+        icon_header("grid", "All of them side by side")
         headers = ["Certification", "Provider", "Level", "Duration", "Cost", "Uplift"]
         rows = [[c["name"], c["provider"], c["level"], c["duration"], c["cost"], c["uplift"]] for c in CERT_TABLE]
 

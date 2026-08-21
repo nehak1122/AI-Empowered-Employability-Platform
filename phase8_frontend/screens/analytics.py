@@ -1,8 +1,9 @@
 import streamlit as st
 from components import charts
+from components.cards import progress_bar_card, icon_header
 from data.dummy_data import (
     ANALYTICS_SUMMARY, SECTION_PERFORMANCE, HOURS_LOGGED,
-    SKILL_PRACTICE_HEATMAP, ATTEMPT_HISTORY,
+    SKILL_PRACTICE_HEATMAP, ATTEMPT_HISTORY, SCORE_HISTORY,
 )
 
 
@@ -29,34 +30,35 @@ def render():
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     left, right = st.columns(2)
     with left:
-        st.markdown('<div class="ea-section">How your score has moved</div>', unsafe_allow_html=True)
+        icon_header("trend", "How your score has moved")
         st.caption("You, the batch average, and the line you need to cross")
-        from data.dummy_data import SCORE_HISTORY
-        charts.line(SCORE_HISTORY["months"], SCORE_HISTORY["student"], SCORE_HISTORY["cohort"], SCORE_HISTORY["target"])
+        with st.container(border=True):
+            charts.line(SCORE_HISTORY["months"], SCORE_HISTORY["student"], SCORE_HISTORY["cohort"], SCORE_HISTORY["target"])
     with right:
-        st.markdown('<div class="ea-section">How you did in each section</div>', unsafe_allow_html=True)
+        icon_header("analytics", "How you did in each section")
         st.caption("Your most recent attempt at each one")
-        charts.bar([s["section"] for s in SECTION_PERFORMANCE], [s["score"] for s in SECTION_PERFORMANCE], warn_below=55)
+        with st.container(border=True):
+            charts.bar([s["section"] for s in SECTION_PERFORMANCE], [s["score"] for s in SECTION_PERFORMANCE], warn_below=55)
 
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     c1, c2, c3 = st.columns([1, 1.4, 1])
     with c1:
-        st.markdown('<div class="ea-section">Hours you have put in</div>', unsafe_allow_html=True)
+        icon_header("score", "Hours you have put in")
         st.caption("Against your target of six hours a week")
-        for h in HOURS_LOGGED:
-            pct = min(round(h["hours"] / h["target"] * 100), 100)
-            tone = "success" if h["met"] else "warning"
-            from components.cards import progress_bar_card
-            progress_bar_card(h["month"], pct, right_label=f'{h["hours"]} hrs', tone=tone)
-        st.warning("July was six hours short. Two extra sessions this week and you're back on track.")
+        with st.container(border=True):
+            for h in HOURS_LOGGED:
+                pct = min(round(h["hours"] / h["target"] * 100), 100)
+                progress_bar_card(h["month"], pct, right_label=f'{h["hours"]} hrs')
+            st.warning("July was six hours short. Two extra sessions this week and you're back on track.")
 
     with c2:
-        st.markdown('<div class="ea-section">Which skills you have practised</div>', unsafe_allow_html=True)
+        icon_header("grid", "Which skills you have practised")
         st.caption("Darker means more practice that month")
-        charts.heatmap(SKILL_PRACTICE_HEATMAP["skills"], SKILL_PRACTICE_HEATMAP["months"], SKILL_PRACTICE_HEATMAP["matrix"])
+        with st.container(border=True):
+            charts.heatmap(SKILL_PRACTICE_HEATMAP["skills"], SKILL_PRACTICE_HEATMAP["months"], SKILL_PRACTICE_HEATMAP["matrix"])
 
     with c3:
-        st.markdown('<div class="ea-section">Everything you have taken</div>', unsafe_allow_html=True)
+        icon_header("reports", "Everything you have taken")
         for a in ATTEMPT_HISTORY:
             kind = "success" if a["kind"] == "success" else "warning"
             st.markdown(f"""

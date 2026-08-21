@@ -1,5 +1,5 @@
 import streamlit as st
-from components.cards import progress_bar_card
+from components.cards import progress_bar_card, icon_header
 from components.badges import badge
 from data.dummy_data import CAREER_MATCHES, FIT_BREAKDOWN, ROLE_REQUIREMENTS
 
@@ -37,16 +37,15 @@ def render():
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     left, right = st.columns(2)
     with left:
-        st.markdown('<div class="ea-section">Fit breakdown</div>', unsafe_allow_html=True)
+        icon_header("skill_gap", "Fit breakdown")
         st.caption("Cloud Support Associate - your best match")
         with st.container(border=True):
             for f in FIT_BREAKDOWN:
-                tone = "success" if f["value"] >= 75 else ("warning" if f["value"] >= 55 else "error")
-                progress_bar_card(f["label"], f["value"], tone=tone)
+                progress_bar_card(f["label"], f["value"])
             st.info("Your skills already clear the bar here. It's only the certification column holding the number down.")
 
     with right:
-        st.markdown('<div class="ea-section">What this role asks for</div>', unsafe_allow_html=True)
+        icon_header("assessment", "What this role asks for")
         st.caption("Taken from 74 live postings for this job title")
         with st.container(border=True):
             for req in ROLE_REQUIREMENTS:

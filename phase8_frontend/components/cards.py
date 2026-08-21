@@ -1,5 +1,20 @@
 import streamlit as st
 from components.badges import badge_html
+from components.icons import icon
+
+
+def icon_header(icon_key, title, right_html=None):
+    """Icon-in-circle + bold title, the header pattern every card section
+    uses now instead of a bare heading - keeps every page's section
+    headers looking like one design language instead of plain text."""
+    right = f'<div style="margin-left:auto;">{right_html}</div>' if right_html else ""
+    st.markdown(f"""
+    <div class="ea-header-row">
+        <div class="ea-icon-badge">{icon(icon_key, 'var(--color-primary)')}</div>
+        <div class="ea-section" style="font-size:18px;">{title}</div>
+        {right}
+    </div>
+    """, unsafe_allow_html=True)
 
 
 def metric_card(label, value, delta=None, kicker=None):
@@ -34,8 +49,26 @@ def score_hero_card(score: int, band: str, vs_cohort: str, to_ready_points: int)
     """, unsafe_allow_html=True)
 
 
-def progress_bar_card(label, pct, right_label=None, tone="default"):
-    tone_class = {"success": "success", "warning": "warning", "error": "error"}.get(tone, "")
+def progress_bar_card(label, pct, right_label=None, tone="scale"):
+    """Every progress bar in the app fills with the same teal, at a depth
+    that scales with the value - strength/completeness reads through shade,
+    not through switching to red/amber/green. The badge or text next to it
+    still carries any pass/fail meaning, same as the design system's rule
+    that colour is never the only signal."""
+    if tone == "scale":
+        if pct >= 75:
+            fill = "var(--color-primary)"
+        elif pct >= 45:
+            fill = "rgba(14, 164, 175, 0.6)"
+        else:
+            fill = "rgba(14, 164, 175, 0.3)"
+    else:
+        fill = {
+            "success": "var(--color-success)",
+            "warning": "var(--color-warning)",
+            "error": "var(--color-error)",
+            "muted": "#D1D5DB",
+        }.get(tone, "var(--color-primary)")
     right = right_label if right_label is not None else f"{pct}%"
     st.markdown(f"""
     <div style="margin-bottom:12px;">
@@ -43,7 +76,7 @@ def progress_bar_card(label, pct, right_label=None, tone="default"):
             <span>{label}</span><span style="color:#6B7280;">{right}</span>
         </div>
         <div class="ea-progress-track">
-            <div class="ea-progress-fill {tone_class}" style="width:{pct}%;"></div>
+            <div class="ea-progress-fill" style="width:{pct}%;background:{fill};"></div>
         </div>
     </div>
     """, unsafe_allow_html=True)

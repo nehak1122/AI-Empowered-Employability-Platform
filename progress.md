@@ -204,3 +204,58 @@ None.
 **What's next**
 Nothing scheduled — next steps depend on what the project lead wants to review, and
 whether backend/ML integration replacing `data/dummy_data.py` becomes the next task.
+
+---
+
+## 2026-08-21
+
+Project lead sent a second round of feedback with a reference image (not a literal spec —
+confirmed scope with them first: redesign the 11 existing pages to match the reference's
+polish/spacing/consistency, don't build the three extra sidebar sections shown in it
+Live Lectures, Skill Edge, Leaderboard - and do it in one sitting rather than splitting
+across days, since this is a visual refresh of finished work, not a fresh build.
+
+**Work completed**
+- Fixed a real inconsistency: `st.container(border=True)` was rendering with Streamlit's
+  own plain square-cornered default instead of matching the app's own `.ea-card` style
+  (rounded corners, shadow). Found by inspecting the DOM directly, not guessing - added a
+  global CSS override so every bordered container now looks identical to a hand-built
+  card. Documented the fragility of that selector (it targets a Streamlit-generated class
+  name) directly in the CSS comment.
+- Added `icon_header()` - an icon-in-a-circle + title pattern - and applied it to every
+  section header across all 11 screens, replacing plain text headings. This was the
+  biggest lever for "looks more professional and consistent."
+- Found and fixed three genuine leftover bugs from the 18 Aug colour migration that a
+  plain hex search had missed: two chart fill colours were still hardcoded as the old
+  purple's RGB triplet (`rgba(108,92,231,...)` instead of the hex form `#6C5CE7`, so the
+  original find/replace walked right past them), and the heatmap's light-end colour was
+  still a pale lavender left over from the same palette. All three are teal now.
+- Removed every remaining red/amber/green fill from progress bars and Skill Overview per
+  the explicit request - `progress_bar_card()` now scales through teal opacity by value
+  instead of switching hue, and chart bars below a threshold go pale teal instead of red.
+  Kept colour on badges only (they're always paired with a word, per the design system's
+  own rule) and on two genuinely bidirectional cases (score drivers, roadmap timeline)
+  where a single hue can't carry the "up vs down" or "done vs not done" meaning - those
+  use teal-family light/dark pairs instead of red/green.
+- Moved "Continue assessment" on the Dashboard from a top-right button to a full-width
+  gradient CTA bar at the bottom, matching the reference. Caught and fixed a real contrast
+  bug while building it - the subtitle text was inheriting the default grey colour instead
+  of white against the teal gradient, unreadable until fixed.
+- Replaced the three emoji icons on the Reports cards with the same icon-badge component
+  used everywhere else, closing out the "consistent icon style" ask and the earlier
+  emoji-spacing cosmetic note from the same file.
+
+**Bug check before wrapping up**
+Clicked through all 11 screens plus the full assessment flow again after all the changes,
+at desktop, tablet, and mobile widths. Checked the server logs - no errors. Also grepped
+the whole codebase for any remaining old-palette hex or rgb values in any form; only hit
+was the "Saved" label on the assessment question page, which was left as green
+deliberately (a one-word status flash, not a decorative colour choice).
+
+**Current progress**
+All 11 screens now share one consistent visual language - same card treatment, same
+header pattern, same colour discipline. Not committed to GitHub yet - holding for the
+go-ahead, same as every other round.
+
+**What's next**
+Nothing scheduled - waiting on review.

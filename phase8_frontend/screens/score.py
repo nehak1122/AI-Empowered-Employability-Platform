@@ -1,6 +1,6 @@
 import streamlit as st
 from components import charts
-from components.cards import score_hero_card
+from components.cards import score_hero_card, icon_header
 from data.dummy_data import SCORE, SCORE_BREAKDOWN, SCORE_DRIVERS
 
 
@@ -24,17 +24,17 @@ def render():
         """, unsafe_allow_html=True)
 
     with right:
-        st.markdown('<div class="ea-section">What makes up your score</div>', unsafe_allow_html=True)
+        icon_header("analytics", "What makes up your score")
         st.caption("The bar is you, the line marks the batch average")
         with st.container(border=True):
             charts.bar([s["label"] for s in SCORE_BREAKDOWN], [s["value"] for s in SCORE_BREAKDOWN], warn_below=55)
 
         st.markdown("<div style='height:24px'></div>", unsafe_allow_html=True)
-        st.markdown('<div class="ea-section">Why you got this score</div>', unsafe_allow_html=True)
+        icon_header("trend", "Why you got this score")
         st.caption("What pushed it up and what pulled it down, starting from a baseline of 55")
         with st.container(border=True):
             for d in SCORE_DRIVERS:
-                color = "var(--color-success)" if d["impact"] > 0 else "var(--color-error)"
+                color = "var(--color-primary)" if d["impact"] > 0 else "#94A3B8"
                 sign = "+" if d["impact"] > 0 else ""
                 width = min(abs(d["impact"]) * 8, 100)
                 st.markdown(f"""
