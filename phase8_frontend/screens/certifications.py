@@ -54,7 +54,8 @@ def render():
             paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
             xaxis_title="Weeks", yaxis_title="Score uplift",
         )
-        st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
+        with st.container(border=True):
+            st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
 
     with right:
         st.markdown('<div class="ea-section">All of them side by side</div>', unsafe_allow_html=True)

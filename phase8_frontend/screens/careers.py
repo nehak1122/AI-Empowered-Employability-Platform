@@ -39,17 +39,19 @@ def render():
     with left:
         st.markdown('<div class="ea-section">Fit breakdown</div>', unsafe_allow_html=True)
         st.caption("Cloud Support Associate - your best match")
-        for f in FIT_BREAKDOWN:
-            tone = "success" if f["value"] >= 75 else ("warning" if f["value"] >= 55 else "error")
-            progress_bar_card(f["label"], f["value"], tone=tone)
-        st.info("Your skills already clear the bar here. It's only the certification column holding the number down.")
+        with st.container(border=True):
+            for f in FIT_BREAKDOWN:
+                tone = "success" if f["value"] >= 75 else ("warning" if f["value"] >= 55 else "error")
+                progress_bar_card(f["label"], f["value"], tone=tone)
+            st.info("Your skills already clear the bar here. It's only the certification column holding the number down.")
 
     with right:
         st.markdown('<div class="ea-section">What this role asks for</div>', unsafe_allow_html=True)
         st.caption("Taken from 74 live postings for this job title")
-        for req in ROLE_REQUIREMENTS:
-            kind = {"Met": "success", "Partial": "warning", "Gap": "error"}[req["status"]]
-            c1, c2 = st.columns([3, 1])
-            c1.markdown(f'{req["item"]}<br/><span class="ea-small">Asked for in {req["asked"]}</span>', unsafe_allow_html=True)
-            with c2:
-                badge(req["status"], kind)
+        with st.container(border=True):
+            for req in ROLE_REQUIREMENTS:
+                kind = {"Met": "success", "Partial": "warning", "Gap": "error"}[req["status"]]
+                c1, c2 = st.columns([3, 1])
+                c1.markdown(f'{req["item"]}<br/><span class="ea-small">Asked for in {req["asked"]}</span>', unsafe_allow_html=True)
+                with c2:
+                    badge(req["status"], kind)

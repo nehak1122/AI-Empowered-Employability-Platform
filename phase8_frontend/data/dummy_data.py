@@ -94,6 +94,32 @@ ASSESSMENT_SECTIONS = [
     {"name": "Domain - Cloud", "status": "Locked", "score": "45 min - not started"},
 ]
 
+ASSESSMENT_DOMAINS = [
+    {"key": "cloud", "name": "Cloud Computing", "desc": "AWS, networking, IaC, and cloud security fundamentals.", "questions": 30, "minutes": 45},
+    {"key": "cyber", "name": "Cybersecurity", "desc": "Threats, identity and access, incident response basics.", "questions": 28, "minutes": 40},
+]
+
+ASSESSMENT_RESULT = {
+    "overall": 76,
+    "band": "Band B - Near-ready",
+    "sections": [
+        {"name": "Technical MCQ", "score": 82},
+        {"name": "Aptitude", "score": 71},
+        {"name": "Communication", "score": 66},
+        {"name": "Domain - Cloud", "score": 84},
+    ],
+    "strengths": [
+        "Strong grasp of IAM and access-control scenarios - scored in the top band on every identity question.",
+        "Networking fundamentals are solid across both the technical and domain sections.",
+    ],
+    "weaknesses": [
+        "Infrastructure-as-code questions were the weakest area - most Terraform-related questions were missed.",
+        "Communication section ran short on time - 4 questions were left unanswered.",
+    ],
+    "insight": "This attempt moved your employability score from 70 to 74. Closing the IaC gap alone is worth "
+               "roughly 7 more points - it's the single highest-impact thing to fix before your next attempt.",
+}
+
 RECOMMENDATIONS = [
     {"provider": "HC", "title": "Terraform Associate", "meta": "4 weeks - closes 2 gaps - ₹6,200", "tag": "Best fit"},
     {"provider": "AWS", "title": "Solutions Architect - Associate", "meta": "8 weeks - closes 3 gaps - ₹12,700", "tag": "Week 5"},

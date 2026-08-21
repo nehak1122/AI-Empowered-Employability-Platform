@@ -39,6 +39,10 @@ def init_state():
         st.session_state.authenticated = False
     if "page" not in st.session_state:
         st.session_state.page = "dashboard"
+    if "assessment_domain" not in st.session_state:
+        st.session_state.assessment_domain = None
+    if "assessment_submitted" not in st.session_state:
+        st.session_state.assessment_submitted = False
 
 
 def go_to(page: str):
@@ -48,3 +52,5 @@ def go_to(page: str):
 def logout():
     st.session_state.authenticated = False
     st.session_state.page = "dashboard"
+    st.session_state.assessment_domain = None
+    st.session_state.assessment_submitted = False

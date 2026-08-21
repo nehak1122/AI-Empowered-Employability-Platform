@@ -16,7 +16,7 @@ def render():
     with left:
         score_hero_card(SCORE["overall"], f"{SCORE['band']} · Near-ready", f"+{SCORE['overall']-SCORE['cohort_average']:.1f}", SCORE["job_ready_threshold"] - SCORE["overall"])
         st.markdown(f"""
-        <div class="ea-card" style="margin-top:12px;">
+        <div class="ea-card" style="margin-top:16px;">
             <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;"><span>Cohort average</span><b>{SCORE['cohort_average']}</b></div>
             <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;"><span>Job-ready threshold</span><b>{SCORE['job_ready_threshold']}</b></div>
             <div style="display:flex;justify-content:space-between;font-size:14px;"><span>Your percentile</span><b>{SCORE['percentile']}th of {SCORE['cohort_size']}</b></div>
@@ -26,24 +26,26 @@ def render():
     with right:
         st.markdown('<div class="ea-section">What makes up your score</div>', unsafe_allow_html=True)
         st.caption("The bar is you, the line marks the batch average")
-        charts.bar([s["label"] for s in SCORE_BREAKDOWN], [s["value"] for s in SCORE_BREAKDOWN], warn_below=55)
+        with st.container(border=True):
+            charts.bar([s["label"] for s in SCORE_BREAKDOWN], [s["value"] for s in SCORE_BREAKDOWN], warn_below=55)
 
-        st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height:24px'></div>", unsafe_allow_html=True)
         st.markdown('<div class="ea-section">Why you got this score</div>', unsafe_allow_html=True)
         st.caption("What pushed it up and what pulled it down, starting from a baseline of 55")
-        for d in SCORE_DRIVERS:
-            color = "#22C55E" if d["impact"] > 0 else "#EF4444"
-            sign = "+" if d["impact"] > 0 else ""
-            width = min(abs(d["impact"]) * 8, 100)
-            st.markdown(f"""
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-                <div style="width:150px;font-size:13px;">{d['label']}</div>
-                <div style="flex:1;background:#F3F4F6;border-radius:6px;height:10px;">
-                    <div style="width:{width}%;background:{color};height:100%;border-radius:6px;"></div>
+        with st.container(border=True):
+            for d in SCORE_DRIVERS:
+                color = "var(--color-success)" if d["impact"] > 0 else "var(--color-error)"
+                sign = "+" if d["impact"] > 0 else ""
+                width = min(abs(d["impact"]) * 8, 100)
+                st.markdown(f"""
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                    <div style="width:150px;font-size:13px;">{d['label']}</div>
+                    <div style="flex:1;background:#F3F4F6;border-radius:6px;height:10px;">
+                        <div style="width:{width}%;background:{color};height:100%;border-radius:6px;"></div>
+                    </div>
+                    <div style="width:44px;text-align:right;font-size:13px;font-weight:600;color:{color};">{sign}{d['impact']}</div>
                 </div>
-                <div style="width:44px;text-align:right;font-size:13px;font-weight:600;color:{color};">{sign}{d['impact']}</div>
-            </div>
-            """, unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
 
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     m1, m2, m3, m4 = st.columns(4)

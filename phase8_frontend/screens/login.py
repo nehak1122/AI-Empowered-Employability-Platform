@@ -2,6 +2,9 @@ import streamlit as st
 
 
 def render():
+    if "login_mode" not in st.session_state:
+        st.session_state.login_mode = "sign_in"
+
     left, right = st.columns([1, 1], gap="large")
 
     with left:
@@ -33,24 +36,66 @@ def render():
         """, unsafe_allow_html=True)
 
     with right:
-        st.markdown('<div class="ea-subhead">Welcome back</div>', unsafe_allow_html=True)
-        st.markdown('<div class="ea-body" style="color:#6B7280;margin-bottom:16px;">Sign in and pick up where you left off.</div>', unsafe_allow_html=True)
+        if st.session_state.login_mode == "sign_in":
+            _render_sign_in()
+        else:
+            _render_create_account()
 
-        st.text_input("Email address", value="aarav.d@college.edu", key="login_email")
-        st.text_input("Password", type="password", value="", placeholder="••••••••••", key="login_password")
-        st.checkbox("Keep me signed in", value=True)
-
-        if st.button("Sign in", type="primary", width="stretch"):
-            st.session_state.authenticated = True
-            st.session_state.page = "dashboard"
-            st.rerun()
-
-        st.markdown('<div style="text-align:center;color:#9CA3AF;margin:12px 0;">or</div>', unsafe_allow_html=True)
-        st.button("Continue with Google", width="stretch")
-
-        st.markdown(
-            '<div style="text-align:center;margin-top:12px;color:#6B7280;">First time here? '
-            '<span style="color:#0EA4AF;font-weight:600;">Create an account</span></div>',
-            unsafe_allow_html=True,
-        )
         st.caption("This is a static frontend preview — sign-in is a stand-in, no real auth or backend is wired up yet.")
+
+
+def _render_sign_in():
+    st.markdown('<div class="ea-subhead">Welcome back</div>', unsafe_allow_html=True)
+    st.markdown('<div class="ea-body" style="color:#6B7280;margin-bottom:16px;">Sign in and pick up where you left off.</div>', unsafe_allow_html=True)
+
+    st.text_input("Email address", value="aarav.d@college.edu", key="login_email")
+    st.text_input("Password", type="password", value="", placeholder="••••••••••", key="login_password")
+    st.checkbox("Keep me signed in", value=True)
+
+    if st.button("Sign in", type="primary", width="stretch"):
+        st.session_state.authenticated = True
+        st.session_state.page = "dashboard"
+        st.rerun()
+
+    st.markdown('<div style="text-align:center;color:#9CA3AF;margin:12px 0;">or</div>', unsafe_allow_html=True)
+    st.button("Continue with Google", width="stretch")
+
+    st.markdown('<div style="text-align:center;margin-top:12px;color:#6B7280;">First time here?</div>', unsafe_allow_html=True)
+    if st.button("Create an account", key="go-create-account", width="stretch"):
+        st.session_state.login_mode = "create_account"
+        st.rerun()
+
+
+def _render_create_account():
+    st.markdown('<div class="ea-subhead">Create your account</div>', unsafe_allow_html=True)
+    st.markdown('<div class="ea-body" style="color:#6B7280;margin-bottom:16px;">Set up your profile, including the ID you\'ll use to sign in.</div>', unsafe_allow_html=True)
+
+    st.text_input("Full name", placeholder="Aarav Deshpande", key="signup_name")
+    st.text_input("College email address", placeholder="aarav.d@college.edu", key="signup_email")
+
+    user_id = st.text_input(
+        "Choose your User ID", placeholder="e.g. aarav.d",
+        key="signup_user_id",
+        help="This is how you'll sign in and how recruiters see you referenced in reports. Letters, numbers, and dots only — can't be changed later.",
+    )
+    if user_id:
+        clean = user_id.strip().lower()
+        valid = clean.replace(".", "").replace("_", "").isalnum() and len(clean) >= 4
+        if valid:
+            st.caption(f"✅ employa.ai/{clean} is available")
+        else:
+            st.caption("⚠️ Use at least 4 characters — letters, numbers, dots, or underscores only.")
+
+    c1, c2 = st.columns(2)
+    c1.text_input("Password", type="password", key="signup_password")
+    c2.text_input("Confirm password", type="password", key="signup_password_confirm")
+
+    st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+    if st.button("Create account", type="primary", width="stretch", key="submit-create-account"):
+        st.session_state.authenticated = True
+        st.session_state.page = "dashboard"
+        st.rerun()
+
+    if st.button("← Back to sign in", key="back-to-signin", width="stretch"):
+        st.session_state.login_mode = "sign_in"
+        st.rerun()

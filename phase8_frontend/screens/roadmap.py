@@ -16,20 +16,29 @@ def render():
     progress_bar_card("Overall progress", 22, right_label="Week 3 of 12 · 22% done")
 
     cols = st.columns(3)
-    for col, phase in zip(cols, ROADMAP_PHASES):
+    for i, (col, phase) in enumerate(zip(cols, ROADMAP_PHASES), start=1):
         with col:
-            border = "border-color:#0EA4AF;" if phase["status"] == "In progress" else ""
+            border = "border-color:var(--color-primary);" if phase["status"] == "In progress" else ""
+            if phase["status"] == "In progress":
+                dot_class, dot_content = "current", str(i)
+            elif phase["progress"] >= 100:
+                dot_class, dot_content = "done", "✓"
+            else:
+                dot_class, dot_content = "pending", str(i)
             st.markdown(f"""
             <div class="ea-card" style="{border}">
-                <div style="display:flex;justify-content:space-between;">
-                    <div class="ea-small">{phase['weeks']}</div>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <div class="ea-step-dot {dot_class}">{dot_content}</div>
+                        <div class="ea-small">{phase['weeks']}</div>
+                    </div>
                     <span class="ea-badge {'ea-badge-purple' if phase['status']=='In progress' else 'ea-badge-neutral'}">{phase['status']}</span>
                 </div>
-                <div class="ea-section" style="margin-top:4px;">{phase['title']}</div>
+                <div class="ea-section" style="margin-top:8px;">{phase['title']}</div>
                 <div class="ea-body" style="color:#6B7280;margin-top:4px;font-size:14px;">{phase['desc']}</div>
             </div>
             """, unsafe_allow_html=True)
-            st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
             progress_bar_card("", phase["progress"], right_label=f"{phase['progress']}%")
 
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
@@ -54,25 +63,27 @@ def render():
     left, right = st.columns(2)
     with left:
         st.markdown('<div class="ea-section">What you are on this week</div>', unsafe_allow_html=True)
-        for item in THIS_WEEK:
-            if item["status"] == "done":
-                st.markdown(f'<div class="ea-card" style="margin-bottom:8px;">✅ {item["title"]}</div>', unsafe_allow_html=True)
-            elif item["status"] == "active":
-                st.markdown(f"""
-                <div class="ea-card" style="border-color:#0EA4AF;margin-bottom:8px;">
-                    <b>{item['title']}</b><br/><span class="ea-small">{item['meta']}</span>
-                </div>
-                """, unsafe_allow_html=True)
-                st.button("Resume lesson", type="primary", key="resume_lesson")
-            else:
-                st.markdown(f'<div class="ea-card" style="margin-bottom:8px;color:#9CA3AF;">{item["title"]}</div>', unsafe_allow_html=True)
+        with st.container(border=True):
+            for item in THIS_WEEK:
+                if item["status"] == "done":
+                    st.markdown(f'<div style="margin-bottom:10px;">✅ {item["title"]}</div>', unsafe_allow_html=True)
+                elif item["status"] == "active":
+                    st.markdown(f"""
+                    <div class="ea-card" style="border-color:var(--color-primary);margin-bottom:10px;">
+                        <b>{item['title']}</b><br/><span class="ea-small">{item['meta']}</span>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    st.button("Resume lesson", type="primary", key="resume_lesson")
+                else:
+                    st.markdown(f'<div style="margin-bottom:10px;color:#9CA3AF;">{item["title"]}</div>', unsafe_allow_html=True)
 
     with right:
         st.markdown('<div class="ea-section">Courses that would help</div>', unsafe_allow_html=True)
-        for c in RECOMMENDATIONS:
-            st.markdown(f"""
-            <div class="ea-card" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                <div><b>{c['title']}</b><br/><span class="ea-small">{c['meta']}</span></div>
-                <span class="ea-badge ea-badge-purple">{c['tag']}</span>
-            </div>
-            """, unsafe_allow_html=True)
+        with st.container(border=True):
+            for c in RECOMMENDATIONS:
+                st.markdown(f"""
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <div><b>{c['title']}</b><br/><span class="ea-small">{c['meta']}</span></div>
+                    <span class="ea-badge ea-badge-purple">{c['tag']}</span>
+                </div>
+                """, unsafe_allow_html=True)

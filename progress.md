@@ -160,3 +160,47 @@ a proper results page at the end of the assessment, user ID creation during setu
 Employability Score page cleanup, and the Roadmap/Certifications/Career Suggestions UI
 passes — then a final cross-page consistency check against all 16 items before calling
 the review done.
+
+---
+
+## 2026-08-20 (final day)
+
+**Work completed**
+- Assessment now starts with a **domain-selection screen** (Cloud Computing / Cybersecurity
+  cards, question count and time shown) before any questions load — item 9. Domain is
+  held in session state; switching it mid-assessment resets the current section, matching
+  the design pack's own rule.
+- Added a **step tracker** across the top of the question flow — done/current/locked
+  sections shown as numbered dots with a connecting line, so it's clear at a glance where
+  you are and what's next (item 7).
+- Built a proper **assessment results page** — overall score, a per-section bar chart,
+  a strengths list, a "where you lost points" list, and a plain-language "what this means
+  for your score" callout — shown after Submit (item 8). Added a small dataset for this
+  (`ASSESSMENT_RESULT` in `data/dummy_data.py`) rather than reusing the dashboard score
+  data, since the two represent different things (overall score vs. one section's result).
+- Login page now has a real **Create Account** form with a **User ID field** or item 10 —
+  live-checks the ID as you type (length/character rules) and shows an "available" message,
+  same pattern a real signup flow would use.
+- Employability Score, Certifications, and Career Suggestions: wrapped the charts and
+  info panels that were sitting bare in bordered cards, matching every other card on the
+  site, and tightened the spacing between sections (item 11, part of item 16).
+- Learning Roadmap: phase cards now show numbered step dots (done/current/pending) instead
+  of relying on the badge text alone, and the "this week" / "courses" lists moved into
+  proper card containers (item 13).
+
+**Bug check before pushing**
+Clicked through all 11 screens plus the full new assessment flow (domain picker → question
+flow → submit → results) and the new signup form, at desktop and tablet widths. Checked
+the server logs after each pass. No errors found — this is the first day's work that went
+straight to a clean run with nothing to fix along the way.
+
+**Current progress**
+All 16 review items from the 18 Aug feedback are addressed. This is the last day of the
+window (18–20 Aug), so today's commit is being pushed once the write-up is done.
+
+**Blockers / issues**
+None.
+
+**What's next**
+Nothing scheduled — next steps depend on what the project lead wants to review, and
+whether backend/ML integration replacing `data/dummy_data.py` becomes the next task.
