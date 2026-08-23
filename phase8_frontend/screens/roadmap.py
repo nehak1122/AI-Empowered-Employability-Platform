@@ -1,5 +1,6 @@
 import streamlit as st
 from components.cards import progress_bar_card, icon_header
+from components.icons import icon
 from data.dummy_data import ROADMAP_PHASES, ROADMAP_TIMELINE, THIS_WEEK, RECOMMENDATIONS
 
 
@@ -67,7 +68,11 @@ def render():
         with st.container(border=True):
             for item in THIS_WEEK:
                 if item["status"] == "done":
-                    st.markdown(f'<div style="margin-bottom:10px;">✅ {item["title"]}</div>', unsafe_allow_html=True)
+                    st.markdown(
+                        f'<div style="margin-bottom:10px;display:flex;gap:8px;align-items:center;">'
+                        f'<span style="color:var(--color-primary);">{icon("check-circle")}</span>{item["title"]}</div>',
+                        unsafe_allow_html=True,
+                    )
                 elif item["status"] == "active":
                     st.markdown(f"""
                     <div class="ea-card" style="border-color:var(--color-primary);margin-bottom:10px;">

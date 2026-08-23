@@ -1,5 +1,5 @@
 import streamlit as st
-from components.cards import progress_bar_card, icon_header
+from components.cards import progress_bar_card, icon_header, message_banner
 from components.badges import badge
 from data.dummy_data import CAREER_MATCHES, FIT_BREAKDOWN, ROLE_REQUIREMENTS
 
@@ -42,7 +42,7 @@ def render():
         with st.container(border=True):
             for f in FIT_BREAKDOWN:
                 progress_bar_card(f["label"], f["value"])
-            st.info("Your skills already clear the bar here. It's only the certification column holding the number down.")
+            message_banner("Good news", "Your skills already clear the bar here. It's only the certification column holding the number down.", kind="success")
 
     with right:
         icon_header("assessment", "What this role asks for")

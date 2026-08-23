@@ -82,9 +82,9 @@ def _render_create_account():
         clean = user_id.strip().lower()
         valid = clean.replace(".", "").replace("_", "").isalnum() and len(clean) >= 4
         if valid:
-            st.caption(f"✅ employa.ai/{clean} is available")
+            st.caption(f"employa.ai/{clean} is available")
         else:
-            st.caption("⚠️ Use at least 4 characters — letters, numbers, dots, or underscores only.")
+            st.caption("Use at least 4 characters — letters, numbers, dots, or underscores only.")
 
     c1, c2 = st.columns(2)
     c1.text_input("Password", type="password", key="signup_password")

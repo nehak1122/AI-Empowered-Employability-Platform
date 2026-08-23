@@ -1,6 +1,7 @@
 import streamlit as st
 from components.badges import badge
 from components.cards import progress_bar_card, icon_header
+from components.icons import icon
 from components import charts
 from data.dummy_data import ASSESSMENT_SECTIONS, ASSESSMENT_DOMAINS, ASSESSMENT_RESULT
 
@@ -113,7 +114,7 @@ def _render_question_flow():
             st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
             nav1, nav2, nav3 = st.columns([1, 1, 1])
             nav1.button("← Previous", width="stretch")
-            nav2.markdown('<div style="text-align:center;color:#22C55E;padding-top:8px;">Saved</div>', unsafe_allow_html=True)
+            nav2.markdown('<div style="text-align:center;color:var(--color-primary);font-weight:600;padding-top:8px;">Saved</div>', unsafe_allow_html=True)
             nav3.button("Next question →", type="primary", width="stretch")
 
         st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
@@ -174,12 +175,20 @@ def _render_results():
         icon_header("check-circle", "Strengths")
         with st.container(border=True):
             for s in ASSESSMENT_RESULT["strengths"]:
-                st.markdown(f'<div class="ea-body" style="margin-bottom:8px;">✅ {s}</div>', unsafe_allow_html=True)
+                st.markdown(
+                    f'<div class="ea-body" style="margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;">'
+                    f'<span style="flex-shrink:0;color:var(--color-primary);">{icon("check-circle")}</span>{s}</div>',
+                    unsafe_allow_html=True,
+                )
     with c2:
         icon_header("alert", "Where you lost points")
         with st.container(border=True):
             for w in ASSESSMENT_RESULT["weaknesses"]:
-                st.markdown(f'<div class="ea-body" style="margin-bottom:8px;">⚠️ {w}</div>', unsafe_allow_html=True)
+                st.markdown(
+                    f'<div class="ea-body" style="margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;">'
+                    f'<span style="flex-shrink:0;color:var(--color-primary-dark);">{icon("alert")}</span>{w}</div>',
+                    unsafe_allow_html=True,
+                )
 
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     st.markdown(f"""

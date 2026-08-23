@@ -259,3 +259,49 @@ go-ahead, same as every other round.
 
 **What's next**
 Nothing scheduled - waiting on review.
+
+---
+
+## 2026-08-23
+
+Project lead came back after seeing the previous pass rendered: still seeing red and
+yellow in places, wants strictly the teal/cyan palette everywhere with no exceptions -
+same reference image, more explicit this time.
+
+**Work completed**
+- Found the actual sources, which were narrower than they sounded: badges (High/Medium/
+  Met, Verified, Empty, etc.) were still on the original green/amber/red status colours,
+  and two spots used Streamlit's *native* `st.info()` / `st.warning()` widgets, which
+  render in Streamlit's own fixed blue/amber and completely ignore the app's theme - no
+  amount of CSS on our side touches those.
+- Redefined the app's status colour tokens as a single teal-intensity scale instead of
+  three hues: pale tint for "fine," light cyan for "worth a look," solid teal for "needs
+  attention." Every badge, priority tag, and progress bar pulls from these same three
+  tokens now, so the fix applied everywhere at once instead of screen-by-screen.
+- Replaced both native `st.info`/`st.warning` calls with the app's own themed banner
+  component instead, matching the card language everywhere else, not just the colour.
+- Found a second, easy-to-miss source: emoji glyphs (⚠️ ✅ ⚡) carry their own fixed
+  colour that CSS cannot override no matter what - swept the whole codebase for every
+  one and replaced each with the same teal SVG icon set already used in the sidebar and
+  headers.
+- Hit a real testing trap while verifying: the running server had been started before
+  these edits, and Streamlit's file-watcher (no `watchdog` installed, so it's on a slow
+  polling fallback) hadn't picked up the change - a page reload alone still showed the
+  old blue box. Caught this by checking the DOM for text that should have been there and
+  finding it genuinely absent, not just mis-styled. Fixed by restarting the server
+  process outright, then re-verified every screen again from a clean start.
+
+**Bug check before wrapping up**
+Grepped the entire codebase for any remaining non-palette hex colour and any status-
+carrying emoji - both came back clean except two deliberate, reasoned exceptions (a
+neutral grey for one text label, a light teal tint already in the palette). Re-checked
+Dashboard, Skill Gap, Careers, Analytics, Assessment (full flow through to results), and
+Profile directly in the browser after the server restart to make sure what shipped
+matches what was actually tested, not a stale cache.
+
+**Current progress**
+No red, amber, or green left anywhere in the app - status now reads through teal
+intensity and icon shape, not hue. Not pushed - same as always, waiting for the go-ahead.
+
+**What's next**
+Nothing scheduled - waiting on review.

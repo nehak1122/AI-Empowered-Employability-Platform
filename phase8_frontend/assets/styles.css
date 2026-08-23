@@ -14,17 +14,22 @@
     --color-accent-bg: #E3F5F7;
     --color-accent-text: #0B7A82;
 
-    --color-success: #22C55E;
-    --color-success-bg: #DCFCE7;
-    --color-success-text: #15803D;
+    /* Status used to be green/amber/red. Per the 21 Aug review ("no red or
+       yellow anywhere, only the teal/cyan palette"), every status now reads
+       through teal INTENSITY instead of hue - pale tint = fine, light cyan
+       = worth a look, solid teal = needs attention. Still never colour
+       alone; every badge that uses these carries a word too. */
+    --color-success: var(--color-primary);
+    --color-success-bg: #E3F5F7;
+    --color-success-text: #0B7A82;
 
-    --color-warning: #F59E0B;
-    --color-warning-bg: #FEF3C7;
-    --color-warning-text: #B45309;
+    --color-warning: var(--color-primary-dark);
+    --color-warning-bg: #AFDDE5;
+    --color-warning-text: #0B7A82;
 
-    --color-error: #EF4444;
-    --color-error-bg: #FEE2E2;
-    --color-error-text: #B91C1C;
+    --color-error: var(--color-primary-dark);
+    --color-error-bg: #0EA4AF;
+    --color-error-text: #FFFFFF;
 
     --color-info-bg: #E3F5F7;
     --color-info-text: #0B7A82;

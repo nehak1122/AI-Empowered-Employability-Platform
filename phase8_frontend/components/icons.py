@@ -29,6 +29,7 @@ ICONS = {
     "alert": f'<svg {_ATTRS}><path d="M12 4 3 19h18Z"/><path d="M12 10v4"/><circle cx="12" cy="16.5" r="0.6" fill="currentColor" stroke="none"/></svg>',
     "grid": f'<svg {_ATTRS}><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>',
     "link": f'<svg {_ATTRS}><path d="M10 14a4.5 4.5 0 0 0 6.4.3l2-2a4.5 4.5 0 0 0-6.4-6.4l-1.1 1.1"/><path d="M14 10a4.5 4.5 0 0 0-6.4-.3l-2 2a4.5 4.5 0 0 0 6.4 6.4l1.1-1.1"/></svg>',
+    "zap": f'<svg {_ATTRS}><path d="M13 3 5 13h6l-1 8 8-11h-6Z"/></svg>',
 }
 
 BOTTOM_NAV_ICONS = {
@@ -40,6 +41,8 @@ BOTTOM_NAV_ICONS = {
 }
 
 
-def icon(name: str, color: str = "currentColor") -> str:
-    svg = ICONS.get(name, "")
-    return svg.replace("currentColor", color)
+def icon(name: str, color: str = "currentColor", size: int = 20) -> str:
+    svg = ICONS.get(name, "").replace("currentColor", color)
+    if size != 20:
+        svg = svg.replace('width="20" height="20"', f'width="{size}" height="{size}"')
+    return svg

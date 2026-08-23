@@ -1,6 +1,6 @@
 import streamlit as st
 from components import charts
-from components.cards import progress_bar_card, icon_header
+from components.cards import progress_bar_card, icon_header, message_banner
 from data.dummy_data import (
     ANALYTICS_SUMMARY, SECTION_PERFORMANCE, HOURS_LOGGED,
     SKILL_PRACTICE_HEATMAP, ATTEMPT_HISTORY, SCORE_HISTORY,
@@ -49,7 +49,7 @@ def render():
             for h in HOURS_LOGGED:
                 pct = min(round(h["hours"] / h["target"] * 100), 100)
                 progress_bar_card(h["month"], pct, right_label=f'{h["hours"]} hrs')
-            st.warning("July was six hours short. Two extra sessions this week and you're back on track.")
+            message_banner("Almost on pace", "July was six hours short. Two extra sessions this week and you're back on track.", kind="warning")
 
     with c2:
         icon_header("grid", "Which skills you have practised")

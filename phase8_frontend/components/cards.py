@@ -83,17 +83,25 @@ def progress_bar_card(label, pct, right_label=None, tone="scale"):
 
 
 def message_banner(title, body, kind="info"):
-    colors = {
-        "success": ("#DCFCE7", "#15803D", "✓"),
-        "warning": ("#FEF3C7", "#B45309", "!"),
-        "error": ("#FEE2E2", "#B91C1C", "✕"),
-        "info": ("#DBEAFE", "#1D4ED8", "i"),
+    """Stands in for st.info/st.warning/st.error, which render in
+    Streamlit's own fixed blue/amber/red and ignore the app's theme
+    entirely - this keeps every inline message on the same teal palette
+    as everything else, distinguished by icon rather than an off-brand
+    hue."""
+    styles = {
+        "success": ("#E3F5F7", "#0B7A82", "check-circle"),
+        "warning": ("#AFDDE5", "#0B7A82", "alert"),
+        "error": ("#0EA4AF", "#FFFFFF", "alert"),
+        "info": ("#E3F5F7", "#0B7A82", "bell"),
     }
-    bg, text, icon = colors.get(kind, colors["info"])
+    bg, text, icon_key = styles.get(kind, styles["info"])
     st.markdown(f"""
-    <div style="background:{bg};color:{text};border-radius:12px;padding:14px 16px;margin-bottom:12px;">
-        <div style="font-weight:600;">{icon}  {title}</div>
-        <div style="font-size:14px;margin-top:2px;">{body}</div>
+    <div style="background:{bg};color:{text};border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start;">
+        <div style="flex-shrink:0;margin-top:1px;">{icon(icon_key, text)}</div>
+        <div>
+            <div style="font-weight:600;">{title}</div>
+            <div style="font-size:14px;margin-top:2px;">{body}</div>
+        </div>
     </div>
     """, unsafe_allow_html=True)
 

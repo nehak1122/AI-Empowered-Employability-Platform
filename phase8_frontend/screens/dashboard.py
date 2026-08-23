@@ -45,9 +45,11 @@ def render():
         </div>
         """, unsafe_allow_html=True)
     with c3:
-        st.markdown("""
+        st.markdown(f"""
         <div class="ea-card" style="border-color:var(--color-primary);background:var(--color-accent-bg);">
-            <div class="ea-card-kicker">⚡ Today's goal</div>
+            <div class="ea-card-kicker" style="display:flex;align-items:center;gap:5px;">
+                <span style="color:var(--color-primary);">{icon('zap', size=13)}</span>Today's goal
+            </div>
             <div class="ea-body" style="font-weight:600;">Start the Terraform module</div>
             <div class="ea-small">Worth around 7 points, ~3 weeks of work.</div>
         </div>
