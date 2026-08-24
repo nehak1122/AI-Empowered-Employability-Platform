@@ -100,7 +100,7 @@ def render():
         icon_header("reports", "Resume")
         with st.container(border=True):
             rc1, rc2 = st.columns([3, 1])
-            rc1.markdown(f'📄 <b>{RESUME["filename"]}</b><br/><span class="ea-small">{RESUME["meta"]}</span>', unsafe_allow_html=True)
+            rc1.markdown(f'<b>{RESUME["filename"]}</b><br/><span class="ea-small">{RESUME["meta"]}</span>', unsafe_allow_html=True)
             with rc2:
                 badge(f"Score {RESUME['score']}", "warning")
 

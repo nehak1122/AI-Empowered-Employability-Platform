@@ -72,7 +72,7 @@ def progress_bar_card(label, pct, right_label=None, tone="scale"):
     right = right_label if right_label is not None else f"{pct}%"
     st.markdown(f"""
     <div style="margin-bottom:12px;">
-        <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:500;margin-bottom:4px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:500;margin-bottom:4px;">
             <span>{label}</span><span style="color:#6B7280;">{right}</span>
         </div>
         <div class="ea-progress-track">

@@ -30,6 +30,9 @@ ICONS = {
     "grid": f'<svg {_ATTRS}><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>',
     "link": f'<svg {_ATTRS}><path d="M10 14a4.5 4.5 0 0 0 6.4.3l2-2a4.5 4.5 0 0 0-6.4-6.4l-1.1 1.1"/><path d="M14 10a4.5 4.5 0 0 0-6.4-.3l-2 2a4.5 4.5 0 0 0 6.4 6.4l1.1-1.1"/></svg>',
     "zap": f'<svg {_ATTRS}><path d="M13 3 5 13h6l-1 8 8-11h-6Z"/></svg>',
+    "star": f'<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"><path d="m12 3 2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L12 17l-5.6 3.1 1.4-6.3-4.8-4.3 6.4-.6Z"/></svg>',
+    "play": f'<svg {_ATTRS}><path d="M7 4.5v15l13-7.5Z"/></svg>',
+    "download": f'<svg {_ATTRS}><path d="M12 3v12.5"/><path d="m7 11 5 5 5-5"/><path d="M5 19.5h14"/></svg>',
 }
 
 BOTTOM_NAV_ICONS = {

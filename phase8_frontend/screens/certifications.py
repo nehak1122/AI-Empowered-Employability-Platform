@@ -3,6 +3,7 @@ from components import charts
 from data.dummy_data import CERT_RECOMMENDATIONS, CERT_TABLE
 from components.tables import responsive_table
 from components.cards import icon_header
+from components.icons import icon
 
 
 def render():
@@ -18,11 +19,14 @@ def render():
         with col:
             hero = c["rank"] == 1
             card_class = "ea-card-hero" if hero else "ea-card"
-            text_color = "" if hero else ""
-            rating = f' · ⭐ {c["rating"]}' if c["rating"] else ""
+            star_color = "#FFFFFF" if hero else "var(--color-primary)"
+            rating = (
+                f' · <span style="display:inline-flex;align-items:center;gap:2px;">'
+                f'{icon("star", star_color)} {c["rating"]}</span>'
+            ) if c["rating"] else ""
             st.markdown(f"""
             <div class="{card_class}">
-                <div style="display:flex;justify-content:space-between;">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
                     <div class="ea-small">{c['provider']} · RANK {c['rank']}</div>
                     <span class="ea-badge {'ea-badge-neutral' if hero else 'ea-badge-purple'}">Match {c['match']}</span>
                 </div>

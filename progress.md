@@ -305,3 +305,39 @@ intensity and icon shape, not hue. Not pushed - same as always, waiting for the 
 
 **What's next**
 Nothing scheduled - waiting on review.
+
+---
+
+## 2026-08-24
+
+Project lead sent the same feedback a third time with the same reference image - the
+23 Aug pass wasn't actually complete. Went looking for what it missed instead of
+re-explaining the same fix.
+
+**Work completed**
+- The 23rd's emoji sweep had only checked for the three symbols mentioned in that
+  session (⚠️ ✅ ⚡) rather than scanning for the whole class of problem. Wrote a proper
+  Unicode-range regex sweep this time instead of grepping for characters I remembered,
+  and it turned up five more: a yellow star rating icon on Certifications, a blue book
+  and a few other plain-color icons in the Dashboard's Quick Actions row, a waving-hand
+  emoji in the greeting, and a document emoji on the Profile page's resume card sitting
+  right next to an icon-badge header that already covered the same thing. All replaced
+  with the app's own teal SVG icon set; the waving hand was just dropped, since a
+  decorative greeting emoji isn't worth building a custom icon for.
+- Found a real, unrelated layout bug while checking the result, not something the colour
+  feedback asked for: the "Recommended" badge on the Reports page was rendering as a
+  stretched 97x75px blob instead of a small pill. Traced it with the DOM inspector rather
+  than guessing - a flex row had the badge and a title that wraps to multiple lines as
+  siblings with no `align-items` set, so the browser's flex default (`stretch`) pulled the
+  badge to match the taller title. Fixed that one, then grepped for the same pattern
+  elsewhere in the codebase and fixed four more before they became visible bugs too.
+
+**Bug check before pushing**
+Full server restart, then clicked through every screen again - including ones this round
+didn't directly touch - at desktop and mobile widths. Checked server logs after each
+pass, none found. Re-ran both sweeps (colour hex/rgb and the Unicode emoji regex) at the
+very end against the final state of the code, not against what I remembered changing.
+
+**Current progress**
+Every screen re-verified clean of both stray colour and layout regressions. Committing
+and pushing this round, per direct instruction.

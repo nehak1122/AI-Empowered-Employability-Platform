@@ -68,10 +68,10 @@ SKILLS_OVERVIEW = [
 ]
 
 QUICK_ACTIONS = [
-    {"label": "Continue assessment", "hint": "Technical - 12 of 30 done", "icon": "▶"},
-    {"label": "Update resume", "hint": "Last uploaded 26 Jul", "icon": "📄"},
-    {"label": "Continue learning", "hint": "Week 3 - Terraform", "icon": "📘"},
-    {"label": "Download report", "hint": "Updated today", "icon": "⬇"},
+    {"label": "Continue assessment", "hint": "Technical - 12 of 30 done", "icon": "play"},
+    {"label": "Update resume", "hint": "Last uploaded 26 Jul", "icon": "reports"},
+    {"label": "Continue learning", "hint": "Week 3 - Terraform", "icon": "book"},
+    {"label": "Download report", "hint": "Updated today", "icon": "download"},
 ]
 
 RECENT_ACTIVITY = [

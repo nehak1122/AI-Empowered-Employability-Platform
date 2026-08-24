@@ -54,7 +54,7 @@ def render():
                 pct = 100 if row["priority"] == "Met" else min(abs(row["impact"]) * 12, 100)
                 st.markdown(f"""
                 <div style="margin-bottom:12px;">
-                    <div style="display:flex;justify-content:space-between;font-size:14px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;font-size:14px;">
                         <span>{row['skill']}</span>{priority_badge_html(row['priority'])}
                     </div>
                     <div class="ea-progress-track"><div class="ea-progress-fill" style="width:{pct}%;"></div></div>
@@ -75,7 +75,7 @@ def render():
         skill, asked, required, have, priority_html, action = r_tuple
         return f"""
         <div class="ea-card" style="margin-bottom:10px;">
-            <div style="display:flex;justify-content:space-between;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
                 <b>{skill}</b>{priority_html}
             </div>
             <div class="ea-small">Needed {required} · You have {have}</div>

@@ -9,7 +9,7 @@ from data.dummy_data import (
 
 
 def render():
-    st.markdown(f'<div class="ea-heading">Good evening, {STUDENT["name"].split()[0]} 👋</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="ea-heading">Good evening, {STUDENT["name"].split()[0]}</div>', unsafe_allow_html=True)
     st.markdown(
         f'<div class="ea-body" style="color:#6B7280;margin-top:4px;">'
         f'Great progress — your score went up {SCORE["points_this_week"]} points this week. '
@@ -26,7 +26,7 @@ def render():
         with col:
             st.markdown(f"""
             <div class="ea-card" style="text-align:left;">
-                <div class="ea-icon-badge" style="margin-bottom:8px;">{action['icon']}</div>
+                <div class="ea-icon-badge" style="margin-bottom:8px;">{icon(action['icon'], 'var(--color-primary)')}</div>
                 <div class="ea-body" style="font-weight:600;">{action['label']}</div>
                 <div class="ea-small">{action['hint']}</div>
             </div>

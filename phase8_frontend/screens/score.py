@@ -17,9 +17,9 @@ def render():
         score_hero_card(SCORE["overall"], f"{SCORE['band']} · Near-ready", f"+{SCORE['overall']-SCORE['cohort_average']:.1f}", SCORE["job_ready_threshold"] - SCORE["overall"])
         st.markdown(f"""
         <div class="ea-card" style="margin-top:16px;">
-            <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;"><span>Cohort average</span><b>{SCORE['cohort_average']}</b></div>
-            <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;"><span>Job-ready threshold</span><b>{SCORE['job_ready_threshold']}</b></div>
-            <div style="display:flex;justify-content:space-between;font-size:14px;"><span>Your percentile</span><b>{SCORE['percentile']}th of {SCORE['cohort_size']}</b></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:14px;margin-bottom:6px;"><span>Cohort average</span><b>{SCORE['cohort_average']}</b></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:14px;margin-bottom:6px;"><span>Job-ready threshold</span><b>{SCORE['job_ready_threshold']}</b></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:14px;"><span>Your percentile</span><b>{SCORE['percentile']}th of {SCORE['cohort_size']}</b></div>
         </div>
         """, unsafe_allow_html=True)
 

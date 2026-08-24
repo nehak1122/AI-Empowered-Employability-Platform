@@ -16,12 +16,12 @@ def render():
     with c1:
         st.markdown(f"""
         <div class="ea-card">
-            <div style="display:flex;justify-content:space-between;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
                 <div class="ea-header-row" style="margin-bottom:0;">
                     <div class="ea-icon-badge">{icon('reports', 'var(--color-primary)')}</div>
                     <div class="ea-section" style="font-size:18px;">The full report</div>
                 </div>
-                <span class="ea-badge ea-badge-purple">Recommended</span>
+                <span class="ea-badge ea-badge-purple" style="flex-shrink:0;">Recommended</span>
             </div>
             <div class="ea-small" style="margin-top:6px;">Your score, the skills you're missing, your plan and the roles you're closest to.</div>
             <div class="ea-card" style="margin-top:10px;background:#F8FAFC;">
