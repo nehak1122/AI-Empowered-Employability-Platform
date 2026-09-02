@@ -10,7 +10,7 @@ def render_sidebar(current_page: str):
             '<div style="display:flex;align-items:center;gap:8px;padding:8px 4px 16px 4px;">'
             '<div style="width:28px;height:28px;border-radius:8px;background:#0EA4AF;'
             'display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;">E</div>'
-            '<span class="ea-sidebar-wordmark-text" style="font-weight:600;color:#fff;">EmployaAI</span>'
+            '<span class="ea-sidebar-wordmark-text" style="font-weight:600;color:var(--color-text-primary);">EmployaAI</span>'
             '</div>',
             unsafe_allow_html=True,
         )
@@ -20,9 +20,10 @@ def render_sidebar(current_page: str):
         # opened/closed across separate st.markdown calls each land in
         # their own isolated container and never actually nest.
         st.markdown(
-            f"<style>.st-key-nav-row-{current_page} {{ background: var(--color-primary); "
-            f"border-radius: 8px; }} .st-key-nav-row-{current_page} .stButton > button "
-            f"{{ color: #fff !important; font-weight: 600 !important; }}</style>",
+            f"<style>.st-key-nav-row-{current_page} {{ background: var(--color-accent-bg); "
+            f"border-radius: 8px; border-left: 3px solid var(--color-primary); }} "
+            f".st-key-nav-row-{current_page} .stButton > button "
+            f"{{ color: var(--color-primary-dark) !important; font-weight: 600 !important; }}</style>",
             unsafe_allow_html=True,
         )
 
@@ -30,7 +31,7 @@ def render_sidebar(current_page: str):
             st.markdown(f'<div class="ea-nav-group-label">{group_label}</div>', unsafe_allow_html=True)
             for key, label, count in items:
                 active = key == current_page
-                icon_color = "#FFFFFF" if active else "#9CA3AF"
+                icon_color = "#0EA4AF" if active else "#9CA3AF"
                 with st.container(key=f"nav-row-{key}"):
                     icon_col, btn_col = st.columns([1, 6], gap="small")
                     with icon_col:
@@ -44,12 +45,12 @@ def render_sidebar(current_page: str):
         st.markdown('<div style="flex-grow:1;"></div>', unsafe_allow_html=True)
         st.markdown(
             f"""
-            <div style="display:flex;align-items:center;gap:8px;margin-top:24px;padding:8px 4px;border-top:1px solid rgba(255,255,255,.08);">
+            <div style="display:flex;align-items:center;gap:8px;margin-top:24px;padding:8px 4px;border-top:1px solid var(--color-border);">
                 <div style="width:32px;height:32px;border-radius:999px;background:#0EA4AF;
                 display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff;font-size:13px;">{STUDENT['initials']}</div>
                 <div class="ea-sidebar-footer-text">
-                    <div style="font-size:13px;font-weight:600;color:#fff;">{STUDENT['name']}</div>
-                    <div style="font-size:12px;color:#9CA3AF;">{STUDENT['track']} · {STUDENT['semester']}</div>
+                    <div style="font-size:13px;font-weight:600;color:var(--color-text-primary);">{STUDENT['name']}</div>
+                    <div style="font-size:12px;color:var(--color-text-secondary);">{STUDENT['track']} · {STUDENT['semester']}</div>
                 </div>
             </div>
             """,

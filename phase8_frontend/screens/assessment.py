@@ -192,9 +192,11 @@ def _render_results():
         st.markdown(f'<div class="ea-heading">Assessment completed - {verdict}</div>', unsafe_allow_html=True)
         st.markdown(f'<div class="ea-body" style="color:#6B7280;">{verdict_sub} Review your detailed breakdown below.</div>', unsafe_allow_html=True)
     with top_r:
-        b1, b2 = st.columns(2)
-        b1.button("Download report", key="dl-assessment-report")
-        b2.button("Share result", type="primary", key="share-assessment-result")
+        # Stacked full-width rather than side-by-side - two short button
+        # pairs squeezed into an already-narrow column is what was causing
+        # "Download report" to wrap mid-word at tablet widths.
+        st.button("Download report", key="dl-assessment-report", width="stretch")
+        st.button("Share result", type="primary", key="share-assessment-result", width="stretch")
 
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
     c1, c2, c3 = st.columns([1, 1.2, 1.2])

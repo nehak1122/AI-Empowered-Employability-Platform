@@ -23,9 +23,9 @@ def render():
             st.markdown(f"""
             <div class="ea-card" style="{border}">
                 <span class="ea-badge {'ea-badge-success' if status_kind=='success' else ('ea-badge-warning' if status_kind=='warning' else 'ea-badge-neutral')}">{role['status']}</span>
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
-                    <div class="ea-section">{role['role']}</div>
-                    <div class="ea-big-number" style="font-size:24px;color:#0EA4AF;">{role['match']}%</div>
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:6px;">
+                    <div class="ea-section" style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{role['role']}</div>
+                    <div class="ea-big-number" style="font-size:24px;color:#0EA4AF;flex-shrink:0;">{role['match']}%</div>
                 </div>
                 <div style="margin-top:6px;">{skills_html}</div>
                 <div class="ea-small" style="margin-top:8px;">Expected salary <b>{role['salary']}</b></div>

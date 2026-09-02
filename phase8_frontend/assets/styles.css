@@ -77,6 +77,18 @@ html, body, [class*="css"] {
     padding: var(--space-2);
 }
 
+/* Streamlit's own stMarkdownContainer carries a built-in -16px bottom
+   margin, sized to exactly cancel the 16px flex gap our elements normally
+   get - anywhere a .ea-card is rendered via st.markdown and a st.button
+   sits directly under it (domain/difficulty picker, career and cert
+   cards, profile, reports, roadmap), that cancels the gap entirely and
+   fuses the card straight onto the button below it. Restore the gap only
+   for markdown containers that wrap one of our cards. */
+[data-testid="stMarkdownContainer"]:has(> .ea-card),
+[data-testid="stMarkdownContainer"]:has(> .ea-card-hero) {
+    margin-bottom: 0 !important;
+}
+
 /* st.container(border=True) renders its own border directly on
    [data-testid="stVerticalBlock"] via a Streamlit-generated emotion-cache
    class rather than a stable data attribute. Pinned to streamlit==1.55 in
@@ -223,16 +235,19 @@ html, body, [class*="css"] {
 }
 
 /* ---------- Sidebar ---------- */
+/* Matches the page background exactly (light theme, not the old dark
+   navy) - separated from the content area by a hairline border only. */
 [data-testid="stSidebar"] {
-    background: #111827;
+    background: var(--color-bg);
+    border-right: 1px solid var(--color-border);
 }
-[data-testid="stSidebar"] * { color: #E5E7EB; }
+[data-testid="stSidebar"] * { color: var(--color-text-secondary); }
 [data-testid="stSidebar"] .stButton > button {
     background: transparent;
     border: none;
     text-align: left;
     justify-content: flex-start;
-    color: #D1D5DB;
+    color: var(--color-text-secondary);
     font-weight: 500;
     min-height: 44px;
     padding-left: 6px;
@@ -245,11 +260,11 @@ html, body, [class*="css"] {
     margin-bottom: 6px;
 }
 [data-testid="stSidebar"] [class*="st-key-nav-row-"]:hover {
-    background: rgba(255,255,255,0.06);
+    background: var(--color-accent-bg);
 }
 [data-testid="stSidebar"] [class*="st-key-nav-row-"] .stButton > button:hover {
     background: transparent;
-    color: #fff;
+    color: var(--color-primary-dark);
 }
 .ea-nav-icon {
     display: flex;
