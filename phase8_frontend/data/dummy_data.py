@@ -95,29 +95,229 @@ ASSESSMENT_SECTIONS = [
 ]
 
 ASSESSMENT_DOMAINS = [
-    {"key": "cloud", "name": "Cloud Computing", "desc": "AWS, networking, IaC, and cloud security fundamentals.", "questions": 30, "minutes": 45},
-    {"key": "cyber", "name": "Cybersecurity", "desc": "Threats, identity and access, incident response basics.", "questions": 28, "minutes": 40},
+    {"key": "cloud", "name": "Cloud Computing", "icon": "cloud", "desc": "AWS, networking, IaC, and cloud security fundamentals.", "questions": 30, "minutes": 45},
+    {"key": "cyber", "name": "Cybersecurity", "icon": "shield", "desc": "Threats, identity and access, incident response basics.", "questions": 28, "minutes": 40},
 ]
 
-ASSESSMENT_RESULT = {
-    "overall": 76,
-    "band": "Band B - Near-ready",
-    "sections": [
-        {"name": "Technical MCQ", "score": 82},
-        {"name": "Aptitude", "score": 71},
-        {"name": "Communication", "score": 66},
-        {"name": "Domain - Cloud", "score": 84},
+ASSESSMENT_DIFFICULTIES = [
+    {"key": "easy", "name": "Easy", "note": "Recommended for you"},
+    {"key": "moderate", "name": "Moderate", "note": "Standard evaluation"},
+    {"key": "hard", "name": "Hard", "note": "Advanced scenarios"},
+]
+
+# Six questions per domain, two per category, each option carrying its own
+# explanation - this is what powers the per-answer feedback and the
+# strengths/improvement-areas split on the results page. Real content, not
+# lorem ipsum, since a fake explanation would be worse than none.
+QUESTION_BANK = {
+    "cloud": [
+        {
+            "id": "c1", "category": "Networking",
+            "text": "A web app in a private subnet needs to call an external API over HTTPS, but must never accept inbound connections from the internet. What should you add?",
+            "options": [
+                {"key": "A", "text": "An internet gateway attached directly to the private subnet"},
+                {"key": "B", "text": "A NAT gateway in a public subnet, with the private subnet routing outbound traffic through it"},
+                {"key": "C", "text": "A public IP address on the app's instance"},
+                {"key": "D", "text": "A VPC peering connection to the internet"},
+            ],
+            "correct": "B",
+            "explanations": {
+                "A": "An internet gateway allows two-way traffic - it would expose the subnet to inbound connections too, not just outbound.",
+                "B": "Correct. A NAT gateway lets resources in a private subnet start outbound connections (like calling an API) without ever being reachable from outside.",
+                "C": "A public IP makes the instance directly reachable from the internet, which is exactly what needs to be avoided here.",
+                "D": "VPC peering connects two private networks to each other - it has nothing to do with reaching the public internet.",
+            },
+        },
+        {
+            "id": "c2", "category": "Networking",
+            "text": "Two servers in the same VPC, different subnets, can't reach each other. Security groups look fine on both. What's the next thing to check?",
+            "options": [
+                {"key": "A", "text": "Whether the subnets' route tables have a route to each other"},
+                {"key": "B", "text": "Whether both servers have the same public IP"},
+                {"key": "C", "text": "Whether the VPC has an internet gateway"},
+                {"key": "D", "text": "Whether the servers are the same instance type"},
+            ],
+            "correct": "A",
+            "explanations": {
+                "A": "Correct. Security groups control what's allowed, but the route table decides whether traffic can get there at all - missing routes are a common cause of same-VPC connectivity issues.",
+                "B": "Two servers having the same public IP isn't a real scenario, and public IPs aren't involved in internal VPC routing.",
+                "C": "An internet gateway is for internet access, not for traffic between two subnets in the same VPC.",
+                "D": "Instance type has no effect on network connectivity between two servers.",
+            },
+        },
+        {
+            "id": "c3", "category": "IAM & security",
+            "text": "An app on EC2 needs to read from one S3 bucket, with no long-lived credentials stored on the instance. What's the correct approach?",
+            "options": [
+                {"key": "A", "text": "Store an access key and secret in an environment variable on the instance"},
+                {"key": "B", "text": "Attach an IAM role to the instance with a policy scoped to that bucket"},
+                {"key": "C", "text": "Make the bucket public and restrict access by IP address"},
+                {"key": "D", "text": "Create an IAM user per instance and rotate the keys weekly"},
+            ],
+            "correct": "B",
+            "explanations": {
+                "A": "This stores long-lived credentials on the instance - if the instance is compromised, so are the keys, and this is exactly what the question rules out.",
+                "B": "Correct. An IAM role gives the instance short-lived, automatically-rotated credentials, scoped to just that bucket - no keys ever live on disk.",
+                "C": "Making a bucket public is a serious exposure risk - IP restriction alone doesn't make this safe, and it's not necessary here.",
+                "D": "Per-instance IAM users still means long-lived keys to manage and rotate - roles solve this problem directly.",
+            },
+        },
+        {
+            "id": "c4", "category": "IAM & security",
+            "text": "You need to give a contractor temporary, read-only access to one project's resources for two weeks. What's the best fit?",
+            "options": [
+                {"key": "A", "text": "Create a permanent IAM user and delete it manually after two weeks"},
+                {"key": "B", "text": "Share your own root account credentials"},
+                {"key": "C", "text": "Create an IAM role with a read-only policy and a two-week session limit, and have them assume it"},
+                {"key": "D", "text": "Give them full admin access, since it's only temporary"},
+            ],
+            "correct": "C",
+            "explanations": {
+                "A": "This works, but relies on someone remembering to delete it - a scoped, time-limited role removes that manual step entirely.",
+                "B": "Never share root credentials - it's unscoped, unrevocable per-person, and a serious security risk.",
+                "C": "Correct. A role with a defined session length and a read-only policy gives exactly the access needed, for exactly as long as needed, with no standing credentials left behind.",
+                "D": "Admin access for read-only work badly violates least privilege, even if it's short-term.",
+            },
+        },
+        {
+            "id": "c5", "category": "Cloud architecture",
+            "text": "A single-instance app keeps going down under traffic spikes. What's the most direct fix?",
+            "options": [
+                {"key": "A", "text": "Upgrade to a bigger instance type only"},
+                {"key": "B", "text": "Put it behind a load balancer with auto-scaling across multiple instances"},
+                {"key": "C", "text": "Add a second internet gateway"},
+                {"key": "D", "text": "Move the app to a different region"},
+            ],
+            "correct": "B",
+            "explanations": {
+                "A": "A bigger instance raises the ceiling but is still a single point of failure - it'll just fail at a higher traffic number.",
+                "B": "Correct. A load balancer with auto-scaling adds capacity automatically as traffic grows, and removes the single point of failure.",
+                "C": "A VPC only needs one internet gateway - adding another doesn't affect capacity or availability.",
+                "D": "Changing region doesn't address capacity at all - the same single-instance problem would just happen somewhere else.",
+            },
+        },
+        {
+            "id": "c6", "category": "Cloud architecture",
+            "text": "What's the main benefit of defining infrastructure in Terraform instead of clicking through the console?",
+            "options": [
+                {"key": "A", "text": "It's the only way to use a cloud provider's free tier"},
+                {"key": "B", "text": "Infrastructure becomes reviewable, versioned, and repeatable, like application code"},
+                {"key": "C", "text": "It automatically makes infrastructure cheaper"},
+                {"key": "D", "text": "It removes the need for IAM permissions"},
+            ],
+            "correct": "B",
+            "explanations": {
+                "A": "Free tier access has nothing to do with how infrastructure is provisioned.",
+                "B": "Correct. Terraform files can be reviewed, version-controlled, and re-run reliably - the same benefits code review brings to application code.",
+                "C": "Terraform doesn't change what resources cost - it changes how reliably and repeatably they're created.",
+                "D": "Terraform still needs valid IAM permissions to create anything - it doesn't bypass access control.",
+            },
+        },
     ],
-    "strengths": [
-        "Strong grasp of IAM and access-control scenarios - scored in the top band on every identity question.",
-        "Networking fundamentals are solid across both the technical and domain sections.",
+    "cyber": [
+        {
+            "id": "y1", "category": "Networking",
+            "text": "A colleague says a firewall alone is enough to secure an internal network. What's the issue with that?",
+            "options": [
+                {"key": "A", "text": "Firewalls only work on Windows machines"},
+                {"key": "B", "text": "A firewall controls traffic at the perimeter but doesn't stop threats already inside the network"},
+                {"key": "C", "text": "Firewalls are always disabled by default"},
+                {"key": "D", "text": "There's no issue - a firewall is fully sufficient"},
+            ],
+            "correct": "B",
+            "explanations": {
+                "A": "Firewalls are platform-independent - this isn't a real limitation.",
+                "B": "Correct. Perimeter defence doesn't help once a threat is already inside (a phishing click, a compromised laptop) - that's why layered controls like segmentation and monitoring matter too.",
+                "C": "Default state varies by vendor and isn't the point of the question.",
+                "D": "Relying on one layer of defence is exactly the risky assumption being asked about here.",
+            },
+        },
+        {
+            "id": "y2", "category": "Networking",
+            "text": "What does network segmentation primarily protect against?",
+            "options": [
+                {"key": "A", "text": "Slow internet speeds"},
+                {"key": "B", "text": "A breach in one part of the network spreading freely to every other part"},
+                {"key": "C", "text": "Hardware failure"},
+                {"key": "D", "text": "Password reuse"},
+            ],
+            "correct": "B",
+            "explanations": {
+                "A": "Segmentation is a security control, not a performance optimisation.",
+                "B": "Correct. Splitting a network into zones limits how far an attacker can move once they've gained a foothold in one segment.",
+                "C": "Hardware redundancy, not segmentation, is what protects against hardware failure.",
+                "D": "Password reuse is addressed by credential policy and MFA, not network design.",
+            },
+        },
+        {
+            "id": "y3", "category": "Identity & access",
+            "text": "Why is multi-factor authentication considered a major security improvement over a password alone?",
+            "options": [
+                {"key": "A", "text": "It makes passwords unnecessary"},
+                {"key": "B", "text": "It requires a second, independent factor, so a stolen password alone isn't enough to log in"},
+                {"key": "C", "text": "It automatically blocks all phishing emails"},
+                {"key": "D", "text": "It makes the login page load faster"},
+            ],
+            "correct": "B",
+            "explanations": {
+                "A": "MFA adds a second factor on top of a password - it doesn't remove the password requirement.",
+                "B": "Correct. Even if a password is leaked or phished, an attacker still needs the second factor (a device, a code, a key) to get in.",
+                "C": "MFA doesn't filter email - that's a separate control entirely.",
+                "D": "MFA has no effect on page load speed.",
+            },
+        },
+        {
+            "id": "y4", "category": "Identity & access",
+            "text": "An employee leaves the company. What's the correct first step from a security standpoint?",
+            "options": [
+                {"key": "A", "text": "Wait until the next scheduled access review"},
+                {"key": "B", "text": "Revoke their account access and credentials immediately"},
+                {"key": "C", "text": "Just change the shared team password"},
+                {"key": "D", "text": "Leave access active in case they return"},
+            ],
+            "correct": "B",
+            "explanations": {
+                "A": "Waiting leaves a valid, unmonitored account active - that's a real exposure window, not a minor delay.",
+                "B": "Correct. Immediate revocation is standard offboarding practice precisely because delayed deprovisioning is a common real-world breach source.",
+                "C": "A shared password doesn't address the individual's personal account access at all.",
+                "D": "Leaving access active for a former employee is a significant, avoidable risk.",
+            },
+        },
+        {
+            "id": "y5", "category": "Security fundamentals",
+            "text": "What's the main difference between encryption at rest and encryption in transit?",
+            "options": [
+                {"key": "A", "text": "There's no real difference, they're the same thing"},
+                {"key": "B", "text": "At rest protects stored data; in transit protects data as it moves across a network"},
+                {"key": "C", "text": "At rest is only for cloud storage; in transit is only for email"},
+                {"key": "D", "text": "In transit is always weaker than at rest"},
+            ],
+            "correct": "B",
+            "explanations": {
+                "A": "They protect data in different states and typically use different mechanisms - they're not interchangeable.",
+                "B": "Correct. Encryption at rest protects data sitting on disk; encryption in transit (like TLS) protects data while it's being sent - a system usually needs both.",
+                "C": "Both apply broadly, not to those specific narrow cases.",
+                "D": "Strength depends on the algorithm and implementation, not on which state is being protected.",
+            },
+        },
+        {
+            "id": "y6", "category": "Security fundamentals",
+            "text": "A user reports a suspicious email asking them to reset their password via a link. What should they do first?",
+            "options": [
+                {"key": "A", "text": "Click the link to check if it's real"},
+                {"key": "B", "text": "Reply to the email asking who sent it"},
+                {"key": "C", "text": "Avoid the link, and verify through a known, separate channel (like typing the site's real URL directly)"},
+                {"key": "D", "text": "Forward it to friends to see if they got it too"},
+            ],
+            "correct": "C",
+            "explanations": {
+                "A": "Clicking an unverified link is exactly the action a phishing attempt is trying to get - even 'just checking' can trigger credential theft.",
+                "B": "Replying confirms to an attacker that the address is active and being read, and doesn't verify anything.",
+                "C": "Correct. Going to the real site directly (not through the email's link) is the safe way to check if the request is genuine.",
+                "D": "Forwarding a suspicious email spreads the risk instead of containing it.",
+            },
+        },
     ],
-    "weaknesses": [
-        "Infrastructure-as-code questions were the weakest area - most Terraform-related questions were missed.",
-        "Communication section ran short on time - 4 questions were left unanswered.",
-    ],
-    "insight": "This attempt moved your employability score from 70 to 74. Closing the IaC gap alone is worth "
-               "roughly 7 more points - it's the single highest-impact thing to fix before your next attempt.",
 }
 
 RECOMMENDATIONS = [

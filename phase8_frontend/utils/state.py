@@ -39,10 +39,20 @@ def init_state():
         st.session_state.authenticated = False
     if "page" not in st.session_state:
         st.session_state.page = "dashboard"
+    reset_assessment_state()
+
+
+def reset_assessment_state():
     if "assessment_domain" not in st.session_state:
         st.session_state.assessment_domain = None
+    if "assessment_difficulty" not in st.session_state:
+        st.session_state.assessment_difficulty = None
     if "assessment_submitted" not in st.session_state:
         st.session_state.assessment_submitted = False
+    if "assessment_current_q" not in st.session_state:
+        st.session_state.assessment_current_q = 0
+    if "assessment_answers" not in st.session_state:
+        st.session_state.assessment_answers = {}
 
 
 def go_to(page: str):
@@ -53,4 +63,7 @@ def logout():
     st.session_state.authenticated = False
     st.session_state.page = "dashboard"
     st.session_state.assessment_domain = None
+    st.session_state.assessment_difficulty = None
     st.session_state.assessment_submitted = False
+    st.session_state.assessment_current_q = 0
+    st.session_state.assessment_answers = {}

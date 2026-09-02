@@ -97,6 +97,26 @@ def donut(labels, values, colors=(PRIMARY, SECONDARY, PRIMARY_DARK), height=260)
     st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
 
 
+def score_ring(value: int, max_value: int = 100, height: int = 220, label: str = None):
+    """A single-number progress ring - the score sits in the middle of the
+    ring itself, done as a two-slice donut with the empty half masked out,
+    rather than Plotly's gauge (which only draws a half-circle)."""
+    fig = go.Figure(go.Pie(
+        values=[value, max_value - value], hole=0.72,
+        marker=dict(colors=[PRIMARY, "#E5E7EB"]),
+        textinfo="none", sort=False, direction="clockwise", rotation=0,
+    ))
+    fig.update_layout(
+        height=height, showlegend=False,
+        annotations=[dict(
+            text=f"<b>{value}%</b>" + (f"<br><span style='font-size:12px;color:#6B7280;'>{label}</span>" if label else ""),
+            x=0.5, y=0.5, font=dict(size=32, color="#111827"), showarrow=False,
+        )],
+        **_LAYOUT_DEFAULTS,
+    )
+    st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
+
+
 def heatmap(rows, cols, matrix, height=220):
     fig = go.Figure(go.Heatmap(
         z=matrix, x=cols, y=rows,

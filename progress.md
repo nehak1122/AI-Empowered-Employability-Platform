@@ -341,3 +341,53 @@ very end against the final state of the code, not against what I remembered chan
 **Current progress**
 Every screen re-verified clean of both stray colour and layout regressions. Committing
 and pushing this round, per direct instruction.
+
+---
+
+## 2026-09-02
+
+Project lead sent three reference screenshots (assessment results page, question page,
+domain/difficulty picker) as style direction for the assessment flow specifically -
+confirmed with them these were reference-only, not literal specs, and that the domain
+names stay as our own (Cloud Computing / Cybersecurity), not the five shown in the
+screenshots.
+
+**Work completed**
+- Domain selection now includes a **difficulty picker** (Easy/Moderate/Hard, Easy
+  pre-selected as recommended) on the same screen, styled as clickable icon tiles
+  instead of the old plain description cards.
+- Rebuilt the question screen to match the reference: each option is a bordered box with
+  a circular letter badge, the selected one highlighted in teal. Selecting an option now
+  locks it in and immediately shows **why it's right or wrong** - a real explanation for
+  every option, not just the correct one, pulled from a proper 6-question bank per domain
+  (`QUESTION_BANK` in `data/dummy_data.py`) instead of the single hardcoded sample
+  question the flow used before.
+- Rebuilt the results page: a score ring (new `charts.score_ring()`), Strengths and
+  Improvement Areas computed live from actual answers grouped by category, a
+  "recommended next step" callout, and three bottom action cards (Review Answers - an
+  expandable per-question breakdown, View Skill Gap, Back to Dashboard).
+- Added a "Retake this assessment" option and an "Exit to domain selection" escape hatch,
+  since the flow is now stateful (current question, answers so far) rather than a single
+  static screen.
+
+**Bugs found and fixed while building this**
+- The option buttons' text was rendering centred instead of left-aligned next to the
+  letter badge. Root cause took real digging: Streamlit centres a button's label by
+  wrapping it in a shrink-to-fit flex child and centring *that* within the button, so
+  `text-align` on the label itself does nothing - fixed one level up, on the wrapper div.
+- The "Next question" button was functionally disabled (confirmed via the DOM) but looked
+  identical to the enabled state, which would have read as broken to anyone testing it.
+  Added a visible disabled style for buttons generally, not just this one case.
+- A copy bug in the "recommended next step" text: it was reusing an explanation string
+  written for a different context, so it read "start with: Correct. An IAM role gives..."
+  - the leftover "Correct." read like a typo. Fixed the phrasing so reused text doesn't
+  carry a stray prefix from its original context.
+
+**Current progress**
+The assessment flow is fully rebuilt and working end to end - domain/difficulty picker,
+question-by-question with instant feedback, and a results page with real strengths/gaps.
+Tested by actually answering questions (including deliberately wrong ones) through to the
+results page and the answer-review expander, not just reading the code. Server logs clean.
+
+**Blockers / issues**
+None. Not pushed until confirmed, same as every round.

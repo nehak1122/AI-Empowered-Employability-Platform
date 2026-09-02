@@ -33,6 +33,9 @@ ICONS = {
     "star": f'<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"><path d="m12 3 2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L12 17l-5.6 3.1 1.4-6.3-4.8-4.3 6.4-.6Z"/></svg>',
     "play": f'<svg {_ATTRS}><path d="M7 4.5v15l13-7.5Z"/></svg>',
     "download": f'<svg {_ATTRS}><path d="M12 3v12.5"/><path d="m7 11 5 5 5-5"/><path d="M5 19.5h14"/></svg>',
+    "cloud": f'<svg {_ATTRS}><path d="M7 18h10.5a3.5 3.5 0 0 0 .5-6.96A5.5 5.5 0 0 0 7.6 9.1 4 4 0 0 0 7 18Z"/></svg>',
+    "shield": f'<svg {_ATTRS}><path d="M12 3.5 5 6v6c0 4.5 3 7.5 7 8.5 4-1 7-4 7-8.5V6Z"/><path d="m9.5 12 1.8 1.8L15 10"/></svg>',
+    "share": f'<svg {_ATTRS}><circle cx="18" cy="5" r="2.3"/><circle cx="6" cy="12" r="2.3"/><circle cx="18" cy="19" r="2.3"/><path d="m8.1 10.8 7.8-4.1M8.1 13.2l7.8 4.1"/></svg>',
 }
 
 BOTTOM_NAV_ICONS = {

@@ -1,61 +1,30 @@
 import streamlit as st
 from components.badges import badge
-from components.cards import progress_bar_card, icon_header
+from components.cards import icon_header, progress_bar_card, message_banner
 from components.icons import icon
 from components import charts
-from data.dummy_data import ASSESSMENT_SECTIONS, ASSESSMENT_DOMAINS, ASSESSMENT_RESULT
-
-QUESTION = {
-    "domain_tags": ["Identity & access", "Medium", "Single choice"],
-    "text": "A team needs an application running on EC2 to read objects from a single "
-            "S3 bucket, with no long-lived credentials stored on the instance. What is the correct approach?",
-    "options": [
-        ("A", "Store an access key and secret in an environment variable on the instance"),
-        ("B", "Attach an IAM role to the instance with a policy scoped to that bucket"),
-        ("C", "Make the bucket public and restrict access by IP address"),
-        ("D", "Create an IAM user per instance and rotate the keys weekly"),
-    ],
-}
+from data.dummy_data import ASSESSMENT_DOMAINS, ASSESSMENT_DIFFICULTIES, QUESTION_BANK
 
 
 def render():
     if st.session_state.get("assessment_submitted"):
         _render_results()
-    elif not st.session_state.get("assessment_domain"):
+    elif not st.session_state.get("assessment_domain") or not st.session_state.get("assessment_difficulty"):
         _render_domain_picker()
     else:
         _render_question_flow()
 
 
-def _step_tracker():
-    """Numbered stepper across the top - which section is done, current, or locked."""
-    step_html = ""
-    total = len(ASSESSMENT_SECTIONS)
-    for i, s in enumerate(ASSESSMENT_SECTIONS, start=1):
-        if s["status"] == "Done":
-            marker = f'<div class="ea-step-dot done">✓</div>'
-        elif s["status"] == "In progress":
-            marker = f'<div class="ea-step-dot current">{i}</div>'
-        else:
-            marker = f'<div class="ea-step-dot pending">{i}</div>'
-        label_color = "var(--color-text-primary)" if s["status"] != "Locked" else "#9CA3AF"
-        step_html += (
-            f'<div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:110px;">'
-            f'{marker}<span style="font-size:12px;color:{label_color};text-align:center;font-weight:600;">{s["name"]}</span>'
-            f'<span style="font-size:11px;color:#9CA3AF;">{s["score"]}</span></div>'
-        )
-        if i < total:
-            line_color = "var(--color-success)" if s["status"] == "Done" else "var(--color-border)"
-            step_html += f'<div style="flex:1;height:2px;background:{line_color};margin-top:15px;"></div>'
-    st.markdown(f'<div class="ea-card" style="display:flex;align-items:flex-start;gap:4px;">{step_html}</div>', unsafe_allow_html=True)
-
+# ---------------------------------------------------------------- picker --
 
 def _render_domain_picker():
-    st.markdown('<div class="ea-heading">Choose your domain</div>', unsafe_allow_html=True)
+    st.session_state.setdefault("_pick_domain", None)
+    st.session_state.setdefault("_pick_difficulty", "easy")
+
+    icon_header("skill_gap", "Select your domain")
     st.markdown(
         '<div class="ea-body" style="color:#6B7280;">Pick the track you want to be assessed on. '
-        'This decides which questions you get for the rest of the assessment - you can switch later, '
-        'but that restarts the section you are on.</div>',
+        'This decides which questions you get for the rest of the assessment.</div>',
         unsafe_allow_html=True,
     )
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
@@ -63,144 +32,257 @@ def _render_domain_picker():
     cols = st.columns(len(ASSESSMENT_DOMAINS))
     for col, d in zip(cols, ASSESSMENT_DOMAINS):
         with col:
+            selected = st.session_state._pick_domain == d["key"]
+            border = "border-color:var(--color-primary);background:var(--color-accent-bg);" if selected else ""
             st.markdown(f"""
-            <div class="ea-card" style="min-height:140px;">
-                <div class="ea-section">{d['name']}</div>
-                <div class="ea-body" style="color:#6B7280;margin-top:6px;font-size:14px;">{d['desc']}</div>
-                <div class="ea-small" style="margin-top:10px;">{d['questions']} questions · ~{d['minutes']} min</div>
+            <div class="ea-card" style="text-align:center;{border}min-height:170px;">
+                <div class="ea-icon-badge" style="margin:0 auto 10px auto;">{icon(d['icon'], 'var(--color-primary)')}</div>
+                <div class="ea-section" style="font-size:16px;">{d['name']}</div>
+                <div class="ea-small" style="margin-top:6px;">{d['desc']}</div>
+                <div class="ea-small" style="margin-top:8px;">{d['questions']} questions · ~{d['minutes']} min</div>
             </div>
             """, unsafe_allow_html=True)
-            if st.button(f"Start {d['name']} →", type="primary", key=f"start-{d['key']}", width="stretch"):
-                st.session_state.assessment_domain = d["key"]
+            label = "✓ Selected" if selected else "Select"
+            if st.button(label, key=f"pick-domain-{d['key']}", type="primary" if selected else "secondary", width="stretch"):
+                st.session_state._pick_domain = d["key"]
                 st.rerun()
 
+    st.markdown("<div style='height:24px'></div>", unsafe_allow_html=True)
+    icon_header("assessment", "Select difficulty")
+    diff_cols = st.columns(len(ASSESSMENT_DIFFICULTIES))
+    for col, level in zip(diff_cols, ASSESSMENT_DIFFICULTIES):
+        with col:
+            selected = st.session_state._pick_difficulty == level["key"]
+            border = "border-color:var(--color-primary);background:var(--color-accent-bg);" if selected else ""
+            st.markdown(f"""
+            <div class="ea-card" style="{border}">
+                <b>{level['name']}</b>
+                <div class="ea-small" style="margin-top:2px;">{level['note']}</div>
+            </div>
+            """, unsafe_allow_html=True)
+            label = "✓ Selected" if selected else "Select"
+            if st.button(label, key=f"pick-diff-{level['key']}", type="primary" if selected else "secondary", width="stretch"):
+                st.session_state._pick_difficulty = level["key"]
+                st.rerun()
+
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    ready = st.session_state._pick_domain is not None
+    if not ready:
+        st.caption("Pick a domain above to continue.")
+    if st.button("Start Assessment →", type="primary", width="stretch", disabled=not ready, key="start-assessment"):
+        st.session_state.assessment_domain = st.session_state._pick_domain
+        st.session_state.assessment_difficulty = st.session_state._pick_difficulty
+        st.session_state.assessment_current_q = 0
+        st.session_state.assessment_answers = {}
+        st.rerun()
+
+
+# ---------------------------------------------------------------- questions --
 
 def _render_question_flow():
-    domain_name = next(d["name"] for d in ASSESSMENT_DOMAINS if d["key"] == st.session_state.assessment_domain)
-    st.markdown(f"""
-    <div class="ea-card" style="background:var(--color-secondary);border:none;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
-            <div>
-                <div class="ea-section" style="color:var(--color-text-primary);">{domain_name} — Technical assessment</div>
-                <div class="ea-body" style="color:var(--color-text-primary);margin-top:4px;">
-                    30 questions, single choice. Answer each one and move on — your progress saves automatically,
-                    so you can leave and pick up right where you left off.
-                </div>
-            </div>
-            <span class="ea-badge ea-badge-neutral">Section 3 of 4</span>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    domain_key = st.session_state.assessment_domain
+    domain = next(d for d in ASSESSMENT_DOMAINS if d["key"] == domain_key)
+    questions = QUESTION_BANK[domain_key]
+    idx = st.session_state.assessment_current_q
+    total = len(questions)
+    q = questions[idx]
+    answers = st.session_state.assessment_answers
+    selected = answers.get(q["id"])
 
-    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-    _step_tracker()
-    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+    st.markdown(f'<div class="ea-small" style="letter-spacing:.06em;text-transform:uppercase;">{domain["name"]} certification · {st.session_state.assessment_difficulty.title()}</div>', unsafe_allow_html=True)
+    top_l, top_r = st.columns([3, 1])
+    with top_l:
+        st.markdown('<div class="ea-heading">Assessment</div>', unsafe_allow_html=True)
+    with top_r:
+        st.markdown(f'<div style="text-align:right;padding-top:10px;color:#6B7280;">Question {idx + 1} of {total}</div>', unsafe_allow_html=True)
+    st.progress((idx + 1) / total)
 
-    main, sidebar = st.columns([2.4, 1])
-
-    with main:
-        st.progress(0.40, text="Question 12 of 30 · 40% complete")
-        st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
-        with st.container(border=True):
-            st.markdown(" ".join(f'<span class="ea-badge ea-badge-neutral">{t}</span>' for t in QUESTION["domain_tags"]), unsafe_allow_html=True)
-            st.markdown(f'<div class="ea-body" style="margin-top:10px;font-weight:600;">{QUESTION["text"]}</div>', unsafe_allow_html=True)
-            st.radio(
-                "options", [f"{k} · {v}" for k, v in QUESTION["options"]],
-                index=1, label_visibility="collapsed",
-            )
-            st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-            st.radio("How sure are you?", ["Guessing", "Fairly sure", "Certain"], index=1, horizontal=True)
-
-            st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-            nav1, nav2, nav3 = st.columns([1, 1, 1])
-            nav1.button("← Previous", width="stretch")
-            nav2.markdown('<div style="text-align:center;color:var(--color-primary);font-weight:600;padding-top:8px;">Saved</div>', unsafe_allow_html=True)
-            nav3.button("Next question →", type="primary", width="stretch")
-
-        st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+    if selected:
         st.markdown(
-            '<div class="ea-small">This is a preview build, so the button below is left enabled — in the '
-            'real assessment it stays locked until all 30 questions in this section are answered.</div>',
+            f"<style>[class*=\"st-key-opt-{q['id']}-{selected}\"] {{ border-color: var(--color-primary) !important; "
+            f"background: var(--color-accent-bg); }}</style>",
             unsafe_allow_html=True,
         )
-        st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
-        if st.button("Submit section →", type="primary", width="stretch", key="submit-section-bottom"):
-            st.session_state.assessment_submitted = True
+    with st.container(border=True):
+        st.markdown(f'<div class="ea-body" style="font-weight:600;font-size:18px;">{q["text"]}</div>', unsafe_allow_html=True)
+        st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+
+        for opt in q["options"]:
+            is_selected = selected == opt["key"]
+            css_key = f"opt-{q['id']}-{opt['key']}"
+            with st.container(key=css_key):
+                dot_class = "current" if is_selected else "pending"
+                oc1, oc2 = st.columns([1, 12], vertical_alignment="center")
+                with oc1:
+                    st.markdown(f'<div class="ea-step-dot {dot_class}">{opt["key"]}</div>', unsafe_allow_html=True)
+                with oc2:
+                    if st.button(opt["text"], key=f"btn-{css_key}", width="stretch", disabled=selected is not None):
+                        answers[q["id"]] = opt["key"]
+                        st.rerun()
+
+        if selected:
+            st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+            is_correct = selected == q["correct"]
+            if is_correct:
+                message_banner("Correct", q["explanations"][q["correct"]], kind="success")
+            else:
+                message_banner(f"Not quite - option {selected} is incorrect", q["explanations"][selected], kind="warning")
+                message_banner(f"Why {q['correct']} is the right answer", q["explanations"][q["correct"]], kind="info")
+
+    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+    nav1, nav2 = st.columns(2)
+    with nav1:
+        if st.button("← Previous", width="stretch", disabled=idx == 0, key="q-prev"):
+            st.session_state.assessment_current_q -= 1
+            st.rerun()
+    with nav2:
+        is_last = idx == total - 1
+        label = "Finish assessment →" if is_last else "Next question →"
+        if st.button(label, type="primary", width="stretch", disabled=selected is None, key="q-next"):
+            if is_last:
+                st.session_state.assessment_submitted = True
+            else:
+                st.session_state.assessment_current_q += 1
             st.rerun()
 
-    with sidebar:
-        icon_header("assessment", "Your sections")
-        with st.container(border=True):
-            for s in ASSESSMENT_SECTIONS:
-                c1, c2 = st.columns([2, 1])
-                c1.markdown(s["name"])
-                with c2:
-                    kind = "success" if s["status"] == "Done" else ("purple" if s["status"] == "In progress" else "neutral")
-                    badge(s["score"], kind)
+    st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+    if st.button("Exit to domain selection", key="switch-domain"):
+        st.session_state.assessment_domain = None
+        st.session_state.assessment_difficulty = None
+        st.rerun()
 
-        st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-        icon_header("grid", "Domain")
-        with st.container(border=True):
-            st.markdown(f'<b>{domain_name}</b>', unsafe_allow_html=True)
-            st.caption("Switching domain restarts this section.")
-            if st.button("Switch domain", key="switch-domain", width="stretch"):
-                st.session_state.assessment_domain = None
-                st.rerun()
+
+# ---------------------------------------------------------------- results --
+
+_LEVEL_COPY = [
+    (80, "Excellent!", "You've demonstrated a strong grasp of the fundamentals."),
+    (60, "Good job!", "Solid overall, with a couple of areas worth another look."),
+    (0, "Keep practicing!", "The basics are there - a bit more practice will make a real difference."),
+]
 
 
 def _render_results():
-    st.markdown('<div class="ea-heading">Section results</div>', unsafe_allow_html=True)
-    st.markdown('<div class="ea-body" style="color:#6B7280;">Here is how the Communication section went, and what it means for your score.</div>', unsafe_allow_html=True)
+    domain_key = st.session_state.assessment_domain
+    domain = next(d for d in ASSESSMENT_DOMAINS if d["key"] == domain_key)
+    questions = QUESTION_BANK[domain_key]
+    answers = st.session_state.assessment_answers
+    total = len(questions)
+    correct_count = sum(1 for q in questions if answers.get(q["id"]) == q["correct"])
+    overall_pct = round(correct_count / total * 100)
+    verdict, verdict_sub = next((v, s) for t, v, s in _LEVEL_COPY if overall_pct >= t)
+
+    categories = {}
+    for q in questions:
+        cat = q["category"]
+        categories.setdefault(cat, {"correct": 0, "total": 0})
+        categories[cat]["total"] += 1
+        if answers.get(q["id"]) == q["correct"]:
+            categories[cat]["correct"] += 1
+    cat_scores = [
+        {"name": c, "pct": round(v["correct"] / v["total"] * 100)}
+        for c, v in categories.items()
+    ]
+    strengths = sorted([c for c in cat_scores if c["pct"] >= 70], key=lambda c: -c["pct"])
+    improvements = sorted([c for c in cat_scores if c["pct"] < 70], key=lambda c: c["pct"])
+
+    icon_header("check-circle", f"{domain['name']} · {st.session_state.assessment_difficulty.title()}")
+    top_l, top_r = st.columns([2.4, 1])
+    with top_l:
+        st.markdown(f'<div class="ea-heading">Assessment completed - {verdict}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="ea-body" style="color:#6B7280;">{verdict_sub} Review your detailed breakdown below.</div>', unsafe_allow_html=True)
+    with top_r:
+        b1, b2 = st.columns(2)
+        b1.button("Download report", key="dl-assessment-report")
+        b2.button("Share result", type="primary", key="share-assessment-result")
+
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-
-    left, right = st.columns([1, 1.6])
-    with left:
-        st.markdown(f"""
-        <div class="ea-card-hero">
-            <div class="ea-small">Overall in this section</div>
-            <div class="ea-big-number" style="font-size:56px;margin-top:8px;">{ASSESSMENT_RESULT['overall']}</div>
-            <div class="ea-small">out of 100</div>
-            <div style="margin-top:10px;"><span class="ea-badge ea-badge-neutral">{ASSESSMENT_RESULT['band']}</span></div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with right:
-        icon_header("analytics", "How each section scored")
-        with st.container(border=True):
-            charts.bar([s["name"] for s in ASSESSMENT_RESULT["sections"]], [s["score"] for s in ASSESSMENT_RESULT["sections"]], warn_below=60)
-
-    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-    c1, c2 = st.columns(2)
+    c1, c2, c3 = st.columns([1, 1.2, 1.2])
     with c1:
-        icon_header("check-circle", "Strengths")
         with st.container(border=True):
-            for s in ASSESSMENT_RESULT["strengths"]:
-                st.markdown(
-                    f'<div class="ea-body" style="margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;">'
-                    f'<span style="flex-shrink:0;color:var(--color-primary);">{icon("check-circle")}</span>{s}</div>',
-                    unsafe_allow_html=True,
-                )
+            st.markdown('<div class="ea-small" style="text-align:center;letter-spacing:.06em;text-transform:uppercase;">Overall score</div>', unsafe_allow_html=True)
+            charts.score_ring(overall_pct, height=200)
+            st.markdown(
+                f'<div style="text-align:center;"><b>{correct_count}/{total} correct</b>'
+                f'<div class="ea-small">Domain: {domain["name"]}</div></div>',
+                unsafe_allow_html=True,
+            )
+
     with c2:
-        icon_header("alert", "Where you lost points")
+        icon_header("trend", "Strengths")
         with st.container(border=True):
-            for w in ASSESSMENT_RESULT["weaknesses"]:
-                st.markdown(
-                    f'<div class="ea-body" style="margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;">'
-                    f'<span style="flex-shrink:0;color:var(--color-primary-dark);">{icon("alert")}</span>{w}</div>',
-                    unsafe_allow_html=True,
-                )
+            if strengths:
+                for s in strengths:
+                    progress_bar_card(s["name"], s["pct"])
+            else:
+                st.caption("None of the categories cleared 70% this attempt - see improvement areas instead.")
+
+    with c3:
+        icon_header("alert", "Improvement areas")
+        with st.container(border=True):
+            if improvements:
+                for w in improvements:
+                    progress_bar_card(w["name"], w["pct"])
+                weakest = improvements[0]
+                weakest_q = next(q for q in questions if q["category"] == weakest["name"] and answers.get(q["id"]) != q["correct"])
+                why = weakest_q["explanations"][weakest_q["correct"]].removeprefix("Correct. ")
+                st.markdown(f"""
+                <div class="ea-card" style="background:var(--color-accent-bg);border:none;margin-top:8px;">
+                    <div class="ea-card-kicker">Recommended next step</div>
+                    <div class="ea-body" style="font-size:14px;">Revisit <b>{weakest['name']}</b>. Key idea to review: {why}</div>
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.caption("No weak spots this attempt - every category cleared 70%.")
+
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    r1, r2, r3 = st.columns(3)
+    with r1:
+        with st.container(border=True):
+            rc1, rc2 = st.columns([1, 5])
+            rc1.markdown(f'<div class="ea-icon-badge">{icon("assessment", "var(--color-primary)")}</div>', unsafe_allow_html=True)
+            rc2.markdown('<b>Review answers</b><br/><span class="ea-small">See detailed explanations.</span>', unsafe_allow_html=True)
+            st.session_state.setdefault("_show_review", False)
+            if st.button("Review answers", key="toggle-review", width="stretch"):
+                st.session_state._show_review = not st.session_state._show_review
+                st.rerun()
+    with r2:
+        with st.container(border=True):
+            rc1, rc2 = st.columns([1, 5])
+            rc1.markdown(f'<div class="ea-icon-badge">{icon("skill_gap", "var(--color-primary)")}</div>', unsafe_allow_html=True)
+            rc2.markdown('<b>View skill gap</b><br/><span class="ea-small">Update your learning path.</span>', unsafe_allow_html=True)
+            if st.button("View skill gap", key="goto-skillgap", width="stretch"):
+                st.session_state.page = "skill_gap"
+                st.rerun()
+    with r3:
+        with st.container(border=True):
+            rc1, rc2 = st.columns([1, 5])
+            rc1.markdown(f'<div class="ea-icon-badge">{icon("dashboard", "var(--color-primary)")}</div>', unsafe_allow_html=True)
+            rc2.markdown('<b>Back to dashboard</b><br/><span class="ea-small">Return to home screen.</span>', unsafe_allow_html=True)
+            if st.button("Back to dashboard", key="goto-dashboard", width="stretch"):
+                st.session_state.page = "dashboard"
+                st.rerun()
+
+    if st.session_state.get("_show_review"):
+        st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+        icon_header("assessment", "Answer review")
+        for i, q in enumerate(questions, start=1):
+            sel = answers.get(q["id"])
+            correct = sel == q["correct"]
+            with st.expander(f"Q{i}. {q['text']}", expanded=False):
+                st.markdown(f"Your answer: **{sel}** · Correct answer: **{q['correct']}**")
+                if correct:
+                    message_banner("Correct", q["explanations"][q["correct"]], kind="success")
+                else:
+                    message_banner(f"You chose {sel} - incorrect", q["explanations"][sel], kind="warning")
+                    message_banner(f"Correct answer: {q['correct']}", q["explanations"][q["correct"]], kind="info")
 
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-    st.markdown(f"""
-    <div class="ea-card" style="background:var(--color-secondary);border:none;">
-        <div class="ea-card-kicker">What this means</div>
-        <div class="ea-body" style="color:var(--color-text-primary);">{ASSESSMENT_RESULT['insight']}</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-    b1, b2 = st.columns(2)
-    if b1.button("Back to assessment", width="stretch", key="results-back"):
+    if st.button("Retake this assessment", key="retake-assessment"):
         st.session_state.assessment_submitted = False
+        st.session_state.assessment_domain = None
+        st.session_state.assessment_difficulty = None
+        st.session_state.assessment_current_q = 0
+        st.session_state.assessment_answers = {}
+        st.session_state._show_review = False
         st.rerun()
-    b2.button("See full skill gap →", type="primary", width="stretch", key="results-skillgap")
